@@ -37,7 +37,6 @@ function initClient(){
         signinButton.onclick = handleSignin;
         signoutButton.onclick = handleSignout;
     }, function(error){
-        location.reload(true);
         console.error(error);
     })
 }
