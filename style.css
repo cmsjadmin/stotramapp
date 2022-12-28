@@ -1,0 +1,471 @@
+:root {
+    --border:1px solid rgb(0, 0, 0);
+    --crimson:crimson;
+    --white:#fff;
+    --cadetblue: cadetblue;
+    --box-shadow:0 5px 10px rgba(0,0,0,.1);
+    --black:#333;
+    --dark-bg:rgba(0,0,0,.7);
+}
+
+html{
+    background-color: orange;
+}
+
+.gallery {
+    /* min-width: 100vh; */
+    padding-left: 10px;
+}
+
+.heading {
+    text-align: center;
+    font-size: medium;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+/* .gallery .storam-container { 
+    columns: 3 350px;
+    column-gap: 15px;
+} */
+
+.gallery .storam-container ul li {
+    background-color: white;
+    color: white;
+    display: inline-block;
+    padding: 3px 10px 20px 21px;
+    width: 95%;
+    overflow: hidden;
+}
+
+
+.gallery .storam-container.active{
+    display: none;
+}
+
+.gallery .storam-container ul li span {
+    position: relative;
+    top: 9px;
+}
+
+.expand-container {
+    width: 150px;
+    height: 0px;
+    position: absolute;
+}
+
+.expand-container ul {
+    position: relative;
+    left: -40px;
+    top: -10px;
+    width: 100%;
+}
+
+.expand-container ul li {
+    text-align: left;
+    list-style: none;
+    border: 1px solid black;
+    border-bottom: 0px;
+    background-color: wheat;
+    padding: 10px 0px;
+    padding-left: 16px;
+    cursor: pointer;
+}
+
+.expand-container ul li:last-child {
+    border-bottom: 1px solid black;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+
+}
+
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: black;
+}
+
+.side-bar {
+    position: absolute;
+    top: 0; 
+    left: -350px;
+    width: 300px;
+    background-color: orange;
+    padding: 20px;
+    height: 100%;
+    overflow-y: scroll;
+}
+
+.side-bar::-webkit-scrollbar {
+    width: 5px;
+}
+
+.side-bar .box .title {
+    margin-bottom: 10px;
+    font-size: 20px;
+    color: black;
+    text-transform: uppercase;
+}
+
+.title_gallery {
+    margin-right: 10px;
+    font-size: 20px;
+    color: black;
+    text-transform: uppercase;
+}
+
+.side-bar .box22 .title {
+    font-size: 20px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.gallery .box {
+    position: relative;
+    right: -40px;
+    width: 100%;
+}
+
+.side-bar .box {
+    border-bottom: var(--border);
+    padding: 20px 0;
+    display: none;
+}
+
+.side-bar .box.active{
+    border-bottom: var(--border);
+    padding: 20px 0;
+    display: block;
+}
+
+/* .gallery .box #search-box {
+    width: 100%;
+    border: border;
+    padding: 12px;
+    font-size: 17px;
+    color: black;
+    text-transform: none;
+} */
+
+.side-bar .box .btn {
+    display: inline-block;
+    margin-top: 10px;
+    margin-left: 10px;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    font-size: 17px;
+    padding: 10px 30px;
+    text-transform: capitalize;
+}
+
+.side-bar .box .btn:hover,
+.side-bar .box .btn.active {
+    background-color: var(--crimson);
+    color: var(--white);
+}
+
+#side-menu {
+    position: sticky;
+    top: 10px; left: 10px;
+    z-index: 1200;
+    height: 20px;
+    width: 20px;
+    line-height: 20px;
+    font-size: 20px;
+    color: var(--black);
+    background-color: var(--white);
+    border: var(--border);
+    box-shadow: var(--box-shadow);
+    text-align: center;
+    cursor: pointer;
+    display: none;
+}
+
+#auth-button {
+    position: absolute;
+    top: 27px; right: 10px;
+}
+
+#auth-button .signin {
+    cursor: pointer;
+    background-color: orange;
+    display: block;
+}
+
+#auth-button .signout {
+    cursor: pointer;
+    background-color: orange;
+    display: none;
+}
+
+h3.main_title {
+    position: fixed;
+    top: -1px;
+    right: 15px;
+    font-size: 25px;
+}
+
+@media(max-width:991px) {
+
+    #side-menu {
+        display: inline-block;
+    }
+
+    #side-menu.fa-times {
+        left: 300px;
+        top: 0;
+    }
+
+    #side-menu.fa-times.heading{
+        right: 100px;
+    }
+
+    .side-bar {
+        left: -350px;
+    }
+
+    .side-bar.active {
+        box-shadow: 0 0 0 200vw var(--dark-bg);
+        left: 0;
+    }
+
+    #btn_filesync {
+        padding: 1px 1px;
+        font-size: 5px;
+        border: none;
+        text-align: center;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+    h3.main_title {
+        position: fixed;
+        top: -1px;
+        right: 384.5px;
+        font-size: 25px;
+    }
+
+    .gallery {
+        padding-left: 20px;
+    }
+
+    .gallery .storam-container ul li {
+        list-style: none;
+        background-color: white;
+        color: white;
+        display: inline-block;
+        padding: 3px 256px 23px 21px;
+        width: 60%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+}
+
+@media(max-width:2560px) {
+    #side-menu {
+        display: inline-block;
+        height: 50px;
+        width: 50px;
+        line-height: 50px;
+    }
+
+    .side-bar.active {
+        box-shadow: 0 0 0 200vw var(--dark-bg);
+        left: 0;
+    }
+
+    #side-menu.fa-times {
+        left: 300px;
+        top: 0;
+    }
+    .gallery{
+        padding-left: 0px;
+        padding-right: 10px;
+    }
+
+    .side-bar.active{
+        left: 0px;
+    }
+}
+
+@media(max-width:619px){
+    h3.main_title {
+        position: fixed;
+        top: -1px;
+        right: 20px;
+        font-size: 25px;
+    }
+
+    #side-menu {
+        display: inline-block;
+    }
+
+    #side-menu.fa-times {
+        left: 300px;
+        top: 0;
+    }
+
+    #side-menu.fa-times.heading{
+        right: 100px;
+    }
+
+    .gallery .storam-container ul li {
+        list-style: none;
+        background-color: white;
+        color: white;
+        padding: 3px 20px 23px 21px;
+        width: 95%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+}
+
+
+@media(max-width:450px) { 
+
+    #side-menu {
+        display: inline-block;
+    }
+
+    #side-menu.fa-times {
+        left: 283px;
+        top: 0;
+    }
+
+    .side-bar.active{
+        width: 283px;
+    }
+
+    #side-menu.fa-times.heading{
+        right: 100px;
+    }
+
+    .gallery .storam-container ul li {
+        list-style: none;
+        background-color: white;
+        color: white;
+        display:block;
+        width: 95%;
+        padding: 3px 3px 3px 3px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    #auth-button .signout {
+        cursor: pointer;
+        position: absolute;
+        left: -73px;
+        top: 30px;
+        background-color: orange;
+    }
+    #auth-button .signin {
+        cursor: pointer;
+        position: absolute;
+        left: -73px;
+        top: 30px;
+        background-color: orange;
+    }
+
+}
+
+@media(max-width: 800px) {
+    .gallery .storam-container ul li {
+        list-style: none;
+        background-color: white;
+        color: white;
+        padding: 14px 10px 31px 21px;
+        width: 95%;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+}
+
+@media(max-width:392px) {
+    #side-menu {
+        display: inline-block;
+    }
+
+    #side-menu.fa-times {
+        left: 300px;
+        top: 0;
+    }
+
+    #side-menu.fa-times.heading{
+        right: 100px;
+    }
+
+    .gallery .storam-container ul li {
+        list-style: none;
+        background-color: white;
+        color: white;
+        width: 95%;
+        padding: 3px 20px 23px 21px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+    h3.main_title {
+        position: fixed;
+        top: -1px;
+        right: 100.5px;
+        font-size: 15px;
+    }
+}
+
+#btn_filesync {
+    border: none;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    margin: -80px 185px;    
+    position: absolute;
+    cursor: pointer;
+    background-color: coral;
+}
+
+table, th, td {
+    border:1px solid black;
+    width: 95%;
+    height: 100%;
+}
+
+.gallery .storam-container {
+    padding: 0px 0px 10px;
+    text-align: left;
+}
+
+.gallery .box.active{
+    display: none;
+}
+
+.gallery .storam-container ul #signinfirst {
+    padding: 10px 67px;
+}
+
+#auth-button.active{
+    display: none;
+}
+
+.side-bar #signinfirst_box22.active{
+    left: 10%;
+    top: 45%;
+    position: relative;
+    display: block;
+}
+
+.side-bar #signinfirst_box22 {
+    display: none;
+}

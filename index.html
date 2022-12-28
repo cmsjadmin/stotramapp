@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1"/>
+    <title>Stotram App Test</title>  
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="side-menu" class="fas fa-bars"></div>
+<div id="auth-button">
+    <button class="signin">Sign In</button>
+    <button class="signout">Sign Out</button>
+</div>
+
+<div class="side-bar">
+    <a id="signinfirst_box22">Sign In To See Category And Language</a>
+    <div class="box22">
+        <h3 class="title">Stotram App</h3>
+    </div>
+
+    <div class="box active">
+        <h3 class="title">Language: </h3>
+        <div class="lang">
+            <div class="btn" data-lang="english">English</div>
+            <div class="btn" data-lang="sanskrit">Sanskrit</div>
+        </div>
+    </div>
+
+    <div class="box active">
+        <h3 class="title">Catagory: </h3>
+        <div class="category">
+            <div class="btn" data-category="Bhagavad Geeta">Bhagavad Geeta</div>
+            <div class="btn" data-category="Devi">Devi</div>
+            <div class="btn" data-category="Ganesha">Ganesha</div>
+            <div class="btn" data-category="Guru">Guru</div>
+            <div class="btn" data-category="Hanuman">Hanuman</div>
+            <div class="btn" data-category="Krishna">Krishna</div>
+            <div class="btn" data-category="Rama">Rama</div>
+            <div class="btn" data-category="Shiva">Shiva</div>
+            <div class="btn" data-category="Vishnu">Vishnu</div>
+        </div>
+    </div>
+
+
+    <div class="box active">
+        <h3 class="title">RESET ALL</h3>
+        <div class="reset">
+            <div class="btn">RESET</div>
+        </div>
+    </div>
+
+</div>
+    
+<div class="gallery">
+    <div class="box">    
+        <h3 class="title_gallery">Search Stotram: </h3>
+        <input type="search" oninput="searchfiles()" placeholder="Search Stotram..." id="search-box">
+    </div>
+
+    <div class="storam-container">
+        <ul>
+            <div id="signinfirst">Loading...</div>
+        </ul>
+    </div>  
+</div>
+
+<script src="script.js"></script>
+<script async defer src="https://apis.google.com/js/api.js"></script>
+</body>
+</html>
