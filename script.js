@@ -134,6 +134,12 @@ function searchfiles() {
 }
 }
 
+menu.classList.toggle('fa-times');
+sideBar.classList.toggle('active');
+box.classList.toggle('active');
+storam_container.classList.toggle('active');
+signinout.classList.toggle('active');
+
 menu.onclick = () => {
     menu.classList.toggle('fa-times');
     sideBar.classList.toggle('active');

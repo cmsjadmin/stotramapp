@@ -1,6 +1,6 @@
 :root {
     --border:1px solid rgb(0, 0, 0);
-    --crimson:crimson;
+    --crimson:rgb(220, 20, 60);
     --white:#fff;
     --cadetblue: cadetblue;
     --box-shadow:0 5px 10px rgba(0,0,0,.1);
@@ -35,6 +35,7 @@ html{
     color: white;
     display: inline-block;
     padding: 3px 10px 20px 21px;
+    border: 3px solid black;
     width: 95%;
     overflow: hidden;
 }
@@ -195,13 +196,13 @@ html{
 
 #auth-button .signin {
     cursor: pointer;
-    background-color: orange;
+    background-color: transparent;
     display: block;
 }
 
 #auth-button .signout {
     cursor: pointer;
-    background-color: orange;
+    background-color: transparent;
     display: none;
 }
 
@@ -232,7 +233,7 @@ h3.main_title {
     }
 
     .side-bar.active {
-        box-shadow: 0 0 0 200vw var(--dark-bg);
+        box-shadow: 0 0 0 200vw rgb(220, 20, 60);
         left: 0;
     }
 
@@ -279,7 +280,7 @@ h3.main_title {
     }
 
     .side-bar.active {
-        box-shadow: 0 0 0 200vw var(--dark-bg);
+        box-shadow: 0 0 0 200vw rgb(173, 22, 52);
         left: 0;
     }
 
