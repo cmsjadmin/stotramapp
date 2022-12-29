@@ -166,11 +166,6 @@ categoryBtn.forEach(btn =>{
             fields: 'files(id, name, webViewLink, description)'
         }).then(function(response){
             displayFiles(response);
-            menu.classList.toggle('fa-times');
-            sideBar.classList.toggle('active');
-            box.classList.toggle('active');
-            storam_container.classList.toggle('active');
-            signinout.classList.toggle('active');
             console.log("Search Response", response);
         }),
         function(err) {console.error("Execute error", err);};
