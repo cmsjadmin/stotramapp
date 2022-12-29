@@ -36,6 +36,7 @@ function initClient(){
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         signinButton.onclick = handleSignin;
         signoutButton.onclick = handleSignout;
+        loadClient().then(execute);
     }, function(error){
         console.error(error);
     })
