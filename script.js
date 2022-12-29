@@ -152,23 +152,42 @@ let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
 
 var dataLang;
+var dataCata;
 
 categoryBtn.forEach(btn =>{
     btn.onclick = () => {
         categoryBtn.forEach(remove => remove.classList.remove('active'));
         btn.classList.add('active');
         dataCata = btn.getAttribute('data-category');
+        console.log("Cata Button Click - dataLang dataCata ", dataLang, dataCata);
+        if(dataLang == null) {
+            console.log("datalang is null");
+            return gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true, 
+                supportsAllDrives: true,
+                q: `name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink, description)'
+            }).then(function(response){
+                displayFiles(response);
+                console.log("Search Response", response);
+            }),
+            function(err) {console.error("Execute error", err);};
+        }
+        else {
+            return gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true, 
+                supportsAllDrives: true,
+                q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink, description)'
+            }).then(function(response){
+                displayFiles(response);
+                console.log("Search Response", response);
+            }),
+            function(err) {console.error("Execute error", err);};
+        }
         
-        return gapi.client.drive.files.list({
-            includeItemsFromAllDrives: true, 
-            supportsAllDrives: true,
-            q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-            fields: 'files(id, name, webViewLink, description)'
-        }).then(function(response){
-            displayFiles(response);
-            console.log("Search Response", response);
-        }),
-        function(err) {console.error("Execute error", err);};
+        
+       
     }
 });
 
@@ -179,16 +198,32 @@ langBtn.forEach(btn =>{
         langBtn.forEach(remove => remove.classList.remove('active'));
         dataLang = btn.getAttribute('data-lang');
         btn.classList.add('active');
-        return gapi.client.drive.files.list({
-            includeItemsFromAllDrives: true,
-            supportsAllDrives: true, 
-            q: `name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-            fields: 'files(id, name, webViewLink, description)'
-        }).then(function(response){
-            displayFiles(response);
-            console.log("Search Response", response);
-        }),
-        function(err) {console.error("Execute error", err);};
+        console.log("Lang Button Click - dataLang dataCata ", dataLang, dataCata);
+        if(dataCata == null) {
+            console.log("datalang is null");
+            return gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true, 
+                supportsAllDrives: true,
+                q: `name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink, description)'
+            }).then(function(response){
+                displayFiles(response);
+                console.log("Search Response", response);
+            }),
+            function(err) {console.error("Execute error", err);};
+        }
+        else {
+            return gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true, 
+                supportsAllDrives: true,
+                q: `name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink, description)'
+            }).then(function(response){
+                displayFiles(response);
+                console.log("Search Response", response);
+            }),
+            function(err) {console.error("Execute error", err);};
+        }
     }
 });
 
