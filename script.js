@@ -149,42 +149,51 @@ menu.onclick = () => {
 };
 
 let categoryBtn = document.querySelectorAll('.category .btn');
+let langBtn = document.querySelectorAll('.lang .btn');
+
+var dataLang;
 
 categoryBtn.forEach(btn =>{
     btn.onclick = () => {
         categoryBtn.forEach(remove => remove.classList.remove('active'));
         btn.classList.add('active');
-        dataCata = btn.getAttribute('data-category')
+        dataCata = btn.getAttribute('data-category');
+        
         return gapi.client.drive.files.list({
             includeItemsFromAllDrives: true, 
             supportsAllDrives: true,
-            q: `name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+            q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
             fields: 'files(id, name, webViewLink, description)'
         }).then(function(response){
             displayFiles(response);
+            menu.classList.toggle('fa-times');
+            sideBar.classList.toggle('active');
+            box.classList.toggle('active');
+            storam_container.classList.toggle('active');
+            signinout.classList.toggle('active');
             console.log("Search Response", response);
         }),
         function(err) {console.error("Execute error", err);};
     }
 });
 
-let langBtn = document.querySelectorAll('.lang .btn');
+
 
 langBtn.forEach(btn =>{
     btn.onclick = () => {
         langBtn.forEach(remove => remove.classList.remove('active'));
         dataLang = btn.getAttribute('data-lang');
         btn.classList.add('active');
-        return gapi.client.drive.files.list({
-            includeItemsFromAllDrives: true,
-            supportsAllDrives: true, 
-            q: `name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-            fields: 'files(id, name, webViewLink, description)'
-        }).then(function(response){
-            displayFiles(response);
-            console.log("Search Response", response);
-        }),
-        function(err) {console.error("Execute error", err);};
+        // return gapi.client.drive.files.list({
+        //     includeItemsFromAllDrives: true,
+        //     supportsAllDrives: true, 
+        //     q: `name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+        //     fields: 'files(id, name, webViewLink, description)'
+        // }).then(function(response){
+        //     displayFiles(response);
+        //     console.log("Search Response", response);
+        // }),
+        // function(err) {console.error("Execute error", err);};
     }
 });
 
