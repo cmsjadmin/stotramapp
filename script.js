@@ -182,7 +182,7 @@ langBtn.forEach(btn =>{
         return gapi.client.drive.files.list({
             includeItemsFromAllDrives: true,
             supportsAllDrives: true, 
-            q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+            q: `name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
             fields: 'files(id, name, webViewLink, description)'
         }).then(function(response){
             displayFiles(response);
