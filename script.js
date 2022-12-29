@@ -179,16 +179,16 @@ langBtn.forEach(btn =>{
         langBtn.forEach(remove => remove.classList.remove('active'));
         dataLang = btn.getAttribute('data-lang');
         btn.classList.add('active');
-        // return gapi.client.drive.files.list({
-        //     includeItemsFromAllDrives: true,
-        //     supportsAllDrives: true, 
-        //     q: `name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-        //     fields: 'files(id, name, webViewLink, description)'
-        // }).then(function(response){
-        //     displayFiles(response);
-        //     console.log("Search Response", response);
-        // }),
-        // function(err) {console.error("Execute error", err);};
+        return gapi.client.drive.files.list({
+            includeItemsFromAllDrives: true,
+            supportsAllDrives: true, 
+            q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+            fields: 'files(id, name, webViewLink, description)'
+        }).then(function(response){
+            displayFiles(response);
+            console.log("Search Response", response);
+        }),
+        function(err) {console.error("Execute error", err);};
     }
 });
 
