@@ -59,7 +59,6 @@ function updateSigninStatus(isSignedIn){
     } else {
         signinButton.style.display = 'block';
         signoutButton.style.display = 'none';
-        loadClient().then(execute);
         // sideBarbox22.classList.add('active');
         // sideBarbox.forEach(remove => remove.classList.remove('active'));
     }
