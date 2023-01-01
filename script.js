@@ -6,6 +6,7 @@ let sideBarbox22 = document.querySelector('.side-bar #signinfirst_box22');
 let storam_container = document.querySelector('.gallery .storam-container');
 let signinout = document.querySelector('#auth-button');
 window.onload = handleClientLoad;
+const element = document.getElementById("id01");
 
 var gdapifiles;
 const CLIENT_ID = '834163430589-vde6a02tetqs1sde9i1pv6ehdq0bu101.apps.googleusercontent.com'
@@ -36,7 +37,6 @@ function initClient(){
         updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
         signinButton.onclick = handleSignin;
         signoutButton.onclick = handleSignout;
-        loadClient().then(execute);
     }, function(error){
         console.error(error);
     })
@@ -59,6 +59,7 @@ function updateSigninStatus(isSignedIn){
     } else {
         signinButton.style.display = 'block';
         signoutButton.style.display = 'none';
+        loadClient().then(execute);
         // sideBarbox22.classList.add('active');
         // sideBarbox.forEach(remove => remove.classList.remove('active'));
     }
@@ -90,7 +91,7 @@ function displayFiles(response) {
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}" target="_blank">"${gdapifiles[i].name}"</a>
+                <a href="${gdapifiles[i].webViewLink}">"${gdapifiles[i].name}"</a>
             </span>
             </li>
             
@@ -118,16 +119,24 @@ function execute() {
             function(err) { console.error("Execute error", err); });
 }
 
+var value;
+
 function searchfiles() {
     document.querySelector('#search-box').oninput = () => {
-        var value = document.querySelector('#search-box').value.toLowerCase();
+        value = document.querySelector('#search-box').value.toString();
     return gapi.client.drive.files.list({
         includeItemsFromAllDrives: true,
         supportsAllDrives: true,
-        q: `text contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
+        q: `name contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
         fields: 'files(id, name, webViewLink, description)'
     }).then(function(response) {
         displayFiles(response);
+        element.innerHTML = `Search: ${value}`;
+        langBtn.forEach(remove => remove.classList.remove('active'));
+        categoryBtn.forEach(remove => remove.classList.remove('active'));
+        if(value == ''){
+            element.innerHTML = `Search Stotram: `;
+        }
         console.log("Search Response", response);
     }),
     function(err) { console.error("Execute error", err);};
@@ -169,6 +178,7 @@ categoryBtn.forEach(btn =>{
                 fields: 'files(id, name, webViewLink, description)'
             }).then(function(response){
                 displayFiles(response);
+                element.innerHTML = `Search: ${dataCata}`;
                 console.log("Search Response", response);
             }),
             function(err) {console.error("Execute error", err);};
@@ -181,6 +191,7 @@ categoryBtn.forEach(btn =>{
                 fields: 'files(id, name, webViewLink, description)'
             }).then(function(response){
                 displayFiles(response);
+                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
             }),
             function(err) {console.error("Execute error", err);};
@@ -208,6 +219,7 @@ langBtn.forEach(btn =>{
                 fields: 'files(id, name, webViewLink, description)'
             }).then(function(response){
                 displayFiles(response);
+                element.innerHTML = `Search: ${dataLang}`;
                 console.log("Search Response", response);
             }),
             function(err) {console.error("Execute error", err);};
@@ -220,6 +232,7 @@ langBtn.forEach(btn =>{
                 fields: 'files(id, name, webViewLink, description)'
             }).then(function(response){
                 displayFiles(response);
+                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
             }),
             function(err) {console.error("Execute error", err);};
@@ -233,6 +246,7 @@ reset.onclick = () => {
     langBtn.forEach(remove => remove.classList.remove('active'));
     categoryBtn.forEach(remove => remove.classList.remove('active'));
     loadClient().then(execute);
+    element.innerHTML = `Search Stotram: `;
 }
 
 document.addEventListener("contextmenu", function (e) {

@@ -20,7 +20,6 @@ html{
 .heading {
     text-align: center;
     font-size: medium;
-    text-transform: uppercase;
     margin-bottom: 20px;
     font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
@@ -117,7 +116,6 @@ html{
     margin-right: 10px;
     font-size: 20px;
     color: black;
-    text-transform: uppercase;
 }
 
 .side-bar .box22 .title {
@@ -145,14 +143,14 @@ html{
     display: block;
 }
 
-/* .gallery .box #search-box {
-    width: 100%;
-    border: border;
+.gallery .box #search-box {
     padding: 12px;
-    font-size: 17px;
+    border-radius: 60px;
+    border: thick;
+    font-size: 14px;
     color: black;
     text-transform: none;
-} */
+}
 
 .side-bar .box .btn {
     display: inline-block;
