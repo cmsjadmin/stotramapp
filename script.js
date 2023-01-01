@@ -119,25 +119,24 @@ function execute() {
             function(err) { console.error("Execute error", err); });
 }
 
-var value;
-
 function searchfiles() {
     document.querySelector('#search-box').oninput = () => {
-        value = document.querySelector('#search-box').value.toString();
+        var value = document.querySelector('#search-box').value.toString();
     return gapi.client.drive.files.list({
         includeItemsFromAllDrives: true,
         supportsAllDrives: true,
         q: `name contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
         fields: 'files(id, name, webViewLink, description)'
     }).then(function(response) {
-        displayFiles(response);
-        element.innerHTML = `Search: ${value}`;
-        langBtn.forEach(remove => remove.classList.remove('active'));
-        categoryBtn.forEach(remove => remove.classList.remove('active'));
         if(value == ''){
             element.innerHTML = `Search Stotram: `;
+        } else {
+            displayFiles(response);
+            element.innerHTML = `Search: ${value}`;
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn.forEach(remove => remove.classList.remove('active'));
+            console.log("Search Response", response);
         }
-        console.log("Search Response", response);
     }),
     function(err) { console.error("Execute error", err);};
 }
