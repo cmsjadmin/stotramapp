@@ -125,7 +125,7 @@ function execute() {
 }
 
 function searchfiles() {
-    document.querySelector('#search-box').onsearch = () => {
+    document.querySelector('#search-box').oninput = () => {
         var value = document.querySelector('#search-box').value.toString();
     return gapi.client.drive.files.list({
         includeItemsFromAllDrives: true,
