@@ -58,16 +58,30 @@
 </div>
     
 <div class="gallery">
+    <form>
+        <input type="file" name="upload" id="uploadbutton" accept="application/pdf" style="display: none;">
+        <input type="submit" name="submit" id="submitbutton" style="display: none;">
+    </form>
     <div class="box">    
         <h3 class="title_gallery" id="id01">Search Stotram: </h3>
-        <input type="search" oninput="searchfiles()" placeholder="Search Stotram..." id="search-box">
+        <input type="search" onsearch="searchfiles()" placeholder="Search Stotram..." id="search-box">
     </div>
-
+    
     <div class="storam-container">
         <ul>
-            <div id="signinfirst">Loading...</div>
+            <div id="signinfirst">Please select Category and Language</div>
         </ul>
     </div>  
+    <!-- <div class="cont">
+        <button class="button" onclick="displayuploadfiles()">Upload</button>
+        <button class="button2" id="button2" onclick="hideuploadfiles()">Close</button>
+    </div> -->
+</div>
+
+<div id="uploadbackgrounddiv">
+    <div class="uploaddiv">
+        
+    </div>
 </div>
 
 <script src="script.js"></script>

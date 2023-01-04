@@ -5,6 +5,9 @@ let sideBarbox = document.querySelectorAll('.side-bar .box');
 let sideBarbox22 = document.querySelector('.side-bar #signinfirst_box22');
 let storam_container = document.querySelector('.gallery .storam-container');
 let signinout = document.querySelector('#auth-button');
+let button = document.querySelector('.button');
+let button2 = document.querySelector('.button2');
+let uploaddiv = document.querySelector('.uploaddiv');
 window.onload = handleClientLoad;
 const element = document.getElementById("id01");
 
@@ -54,12 +57,14 @@ function updateSigninStatus(isSignedIn){
         signinButton.style.display = 'none';
         signoutButton.style.display = 'block';
         loadClient().then(execute);
+        // button.classList.remove('active');
         sideBarbox22.classList.remove('active');
         sideBarbox.forEach(add => add.classList.add('active'));
     } else {
         signinButton.style.display = 'block';
         signoutButton.style.display = 'none';
         loadClient().then(execute);
+        // button.classList.add('active');
         // sideBarbox22.classList.add('active');
         // sideBarbox.forEach(remove => remove.classList.remove('active'));
     }
@@ -120,7 +125,7 @@ function execute() {
 }
 
 function searchfiles() {
-    document.querySelector('#search-box').oninput = () => {
+    document.querySelector('#search-box').onsearch = () => {
         var value = document.querySelector('#search-box').value.toString();
     return gapi.client.drive.files.list({
         includeItemsFromAllDrives: true,
@@ -246,6 +251,26 @@ reset.onclick = () => {
     categoryBtn.forEach(remove => remove.classList.remove('active'));
     loadClient().then(execute);
     element.innerHTML = `Search Stotram: `;
+}
+
+function displayuploadfiles() {
+    menu.classList.toggle('active');
+    uploaddiv.classList.toggle('active');
+    box.classList.toggle('active');
+    storam_container.classList.toggle('active');
+    signinout.classList.toggle('active');
+    button.classList.toggle('active');
+    button2.classList.toggle('active');
+}
+
+function hideuploadfiles() {
+    menu.classList.toggle('active');
+    uploaddiv.classList.toggle('active');
+    box.classList.toggle('active');
+    storam_container.classList.toggle('active');
+    signinout.classList.toggle('active');
+    button.classList.toggle('active');
+    button2.classList.toggle('active');
 }
 
 document.addEventListener("contextmenu", function (e) {

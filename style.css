@@ -184,6 +184,10 @@ html{
     box-shadow: var(--box-shadow);
     text-align: center;
     cursor: pointer;
+    display: block;
+}
+
+#side-menu.active{
     display: none;
 }
 
@@ -467,4 +471,57 @@ table, th, td {
 
 .side-bar #signinfirst_box22 {
     display: none;
+}
+    
+.button{
+    width: 65px;
+    height: 61px;
+    border-radius: 60px;
+    border: thick;
+    cursor: pointer;
+    position: absolute;
+    right: 4%;
+    bottom: 82%;
+    color: white;
+    background-color: blue;
+    display: block;
+}
+
+.button.active{
+    display: none;
+}
+
+.button2 {
+    width: 65px;
+    height: 61px;
+    border-radius: 60px;
+    border: thick;
+    cursor: pointer;
+    position: absolute;
+    right: 4%;
+    bottom: 90%;
+    color: white;
+    background-color: blue;
+    display: none;
+}
+
+.button2.active{
+    display: block;
+}
+
+.uploaddiv {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5px;
+    width: 85%;
+    height: 80%;
+    border: 3px solid #fff;
+    object-fit: cover;
+    display: none;
+}
+
+.uploaddiv.active {
+    display: block;
 }
