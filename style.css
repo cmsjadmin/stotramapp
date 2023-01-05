@@ -428,6 +428,11 @@ h3.main_title {
         top: 10%;
         width: 28%;
     }
+    
+    .side-bar.active{
+        width: 90%;
+        height: 100%;
+    }
 }
 
 #btn_filesync {

@@ -249,6 +249,9 @@ reset.onclick = () => {
     langBtn.forEach(remove => remove.classList.remove('active'));
     categoryBtn.forEach(remove => remove.classList.remove('active'));
     loadClient().then(execute);
+    dataCata = null;
+    dataLang = null;
+    console.log("Reset Button Click - dataLang dataCata ", dataLang, dataCata);
     element.innerHTML = `Search Stotram: `;
 }
 
