@@ -372,21 +372,9 @@ h3.main_title {
         white-space: nowrap;
         overflow: hidden;
     }
-    #auth-button .signout {
-        cursor: pointer;
-        position: absolute;
-        left: -73px;
-        top: 30px;
-        background-color: orange;
-        display: none;
-    }
-    #auth-button .signin {
-        cursor: pointer;
-        position: absolute;
-        left: -73px;
-        top: 30px;
-        background-color: orange;
-        display: none;
+    #bottombtn {
+        right: 60px;
+        width: 28%;
     }
 
 }
@@ -433,6 +421,12 @@ h3.main_title {
         top: -1px;
         right: 100.5px;
         font-size: 15px;
+    }
+
+    #bottombtn {
+        right: 9%;
+        top: 10%;
+        width: 28%;
     }
 }
 
@@ -489,27 +483,4 @@ button{
     font-size: 16px;
     cursor: pointer;
     right: 10%;
-}
-
-#bottombtn {
-    display: block;
-    position: fixed;
-    background: burlywood;
-    border: none;
-    color: black;
-    padding: 3px 10px;
-    font-size: 16px;
-    cursor: pointer;
-    right: 76%;
-    top: 10%;
-    width: 5%;
-}
-
-#bottombtn.active {
-    display: none;
-}
-
-#arrowdown {
-    width: 70%;
-    height: 10%;
 }
