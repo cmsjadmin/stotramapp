@@ -5,9 +5,7 @@ let sideBarbox = document.querySelectorAll('.side-bar .box');
 let sideBarbox22 = document.querySelector('.side-bar #signinfirst_box22');
 let storam_container = document.querySelector('.gallery .storam-container');
 let signinout = document.querySelector('#auth-button');
-let button = document.querySelector('.button');
-let button2 = document.querySelector('.button2');
-let uploaddiv = document.querySelector('.uploaddiv');
+let bottombtn = document.querySelector('#bottombtn');
 window.onload = handleClientLoad;
 const element = document.getElementById("id01");
 
@@ -159,6 +157,7 @@ menu.onclick = () => {
     box.classList.toggle('active');
     storam_container.classList.toggle('active');
     signinout.classList.toggle('active');
+    bottombtn.classList.toggle('active');
 };
 
 let categoryBtn = document.querySelectorAll('.category .btn');
@@ -253,24 +252,8 @@ reset.onclick = () => {
     element.innerHTML = `Search Stotram: `;
 }
 
-function displayuploadfiles() {
-    menu.classList.toggle('active');
-    uploaddiv.classList.toggle('active');
-    box.classList.toggle('active');
-    storam_container.classList.toggle('active');
-    signinout.classList.toggle('active');
-    button.classList.toggle('active');
-    button2.classList.toggle('active');
-}
-
-function hideuploadfiles() {
-    menu.classList.toggle('active');
-    uploaddiv.classList.toggle('active');
-    box.classList.toggle('active');
-    storam_container.classList.toggle('active');
-    signinout.classList.toggle('active');
-    button.classList.toggle('active');
-    button2.classList.toggle('active');
+function bottomFunction() {
+    sideBar.scrollTop = 100000;
 }
 
 document.addEventListener("contextmenu", function (e) {

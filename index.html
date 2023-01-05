@@ -13,12 +13,12 @@
 <body>
 
 <div id="side-menu" class="fas fa-bars"></div>
-<div id="auth-button">
+<div id="auth-button" style="display: none;">
     <button class="signin">Sign In</button>
     <button class="signout">Sign Out</button>
 </div>
-
 <div class="side-bar">
+    <button id="bottombtn" onclick="bottomFunction()"><img id="arrowdown" src="https://cdn-icons-png.flaticon.com/512/2722/2722987.png"></button>
     <a id="signinfirst_box22">Sign In To See Category And Language</a>
     <div class="box22">
         <h3 class="title">Stotram App</h3>
@@ -35,33 +35,35 @@
     <div class="box active">
         <h3 class="title">Category: </h3>
         <div class="category">
-            <div class="btn" data-category="Bhagavad Geeta">Bhagavad Geeta</div>
+            <div class="btn" data-category="Bhagavad Geeta"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Krishna_tells_Gita_to_Arjuna.jpg" alt="logo">Bhagavad Geeta</div>
             <div class="btn" data-category="Devi">Devi</div>
-            <div class="btn" data-category="Ganesha">Ganesha</div>
+            <div class="btn" data-category="Ganesha"><img src="https://upload.wikimedia.org/wikipedia/en/f/f9/Original_Ganesha_illustration.PNG" alt="logo">Ganesha</div>
             <div class="btn" data-category="Guru">Guru</div>
-            <div class="btn" data-category="Hanuman">Hanuman</div>
-            <div class="btn" data-category="Krishna">Krishna</div>
-            <div class="btn" data-category="Rama">Rama</div>
-            <div class="btn" data-category="Shiva">Shiva</div>
-            <div class="btn" data-category="Vishnu">Vishnu</div>
+            <div class="btn" data-category="Hanuman"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Statue_of_Lord_Hanuman_at_Dharwad.jpg" alt="logo">Hanuman</div>
+            <div class="btn" data-category="Krishna"><img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Radha_Krishna_2.jpg" alt="logo">Krishna</div>
+            <div class="btn" data-category="Rama"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Statue_of_Rama_in_Kangra_district_of_Himachal_Pradesh.jpg" alt="logo">Rama</div>
+            <div class="btn" data-category="Shiva"><img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Lord_shiva.JPG" alt="logo">Shiva</div>
+            <div class="btn" data-category="Vishnu"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Lord_Vishnu_image.jpg" alt="logo">Vishnu</div>
         </div>
     </div>
 
 
     <div class="box active">
-        <h3 class="title">RESET ALL</h3>
+        <h3 class="title">See The Results</h3>
+        <div class="reset">
+            <div class="btn">Results</div>
+        </div>
+    </div>
+
+    <div class="box active">
+        <h3 class="title">RESET LANGUAGE AND CATEGORY</h3>
         <div class="reset">
             <div class="btn">RESET</div>
         </div>
     </div>
-
 </div>
     
 <div class="gallery">
-    <form>
-        <input type="file" name="upload" id="uploadbutton" accept="application/pdf" style="display: none;">
-        <input type="submit" name="submit" id="submitbutton" style="display: none;">
-    </form>
     <div class="box">    
         <h3 class="title_gallery" id="id01">Search Stotram: </h3>
         <input type="search" oninput="searchfiles()" placeholder="Search Stotram..." id="search-box">
@@ -76,12 +78,6 @@
         <button class="button" onclick="displayuploadfiles()">Upload</button>
         <button class="button2" id="button2" onclick="hideuploadfiles()">Close</button>
     </div> -->
-</div>
-
-<div id="uploadbackgrounddiv">
-    <div class="uploaddiv">
-        
-    </div>
 </div>
 
 <script src="script.js"></script>

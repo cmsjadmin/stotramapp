@@ -153,13 +153,14 @@ html{
 }
 
 .side-bar .box .btn {
-    display: inline-block;
+    border-radius: 20px;
     margin-top: 10px;
     margin-left: 10px;
     background-color: white;
     color: black;
     cursor: pointer;
     font-size: 17px;
+    text-align: center;
     padding: 10px 30px;
     text-transform: capitalize;
 }
@@ -168,6 +169,11 @@ html{
 .side-bar .box .btn.active {
     background-color: var(--crimson);
     color: var(--white);
+}
+
+.side-bar .box .btn img {
+    width: 100%;
+    height: 100%;
 }
 
 #side-menu {
@@ -194,12 +200,13 @@ html{
 #auth-button {
     position: absolute;
     top: 27px; right: 10px;
+    display: none;
 }
 
 #auth-button .signin {
     cursor: pointer;
     background-color: transparent;
-    display: block;
+    display: none;
 }
 
 #auth-button .signout {
@@ -371,6 +378,7 @@ h3.main_title {
         left: -73px;
         top: 30px;
         background-color: orange;
+        display: none;
     }
     #auth-button .signin {
         cursor: pointer;
@@ -378,6 +386,7 @@ h3.main_title {
         left: -73px;
         top: 30px;
         background-color: orange;
+        display: none;
     }
 
 }
@@ -472,56 +481,35 @@ table, th, td {
 .side-bar #signinfirst_box22 {
     display: none;
 }
-    
-.button{
-    width: 65px;
-    height: 61px;
-    border-radius: 60px;
-    border: thick;
+
+button{
+    border: none;
+    color: black;
+    padding: 14px 28px;
+    font-size: 16px;
     cursor: pointer;
-    position: absolute;
-    right: 4%;
-    bottom: 82%;
-    color: white;
-    background-color: blue;
+    right: 10%;
+}
+
+#bottombtn {
     display: block;
-}
-
-.button.active{
-    display: none;
-}
-
-.button2 {
-    width: 65px;
-    height: 61px;
-    border-radius: 60px;
-    border: thick;
-    cursor: pointer;
-    position: absolute;
-    right: 4%;
-    bottom: 90%;
-    color: white;
-    background-color: blue;
-    display: none;
-}
-
-.button2.active{
-    display: block;
-}
-
-.uploaddiv {
     position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    border-radius: 5px;
-    width: 85%;
-    height: 80%;
-    border: 3px solid #fff;
-    object-fit: cover;
+    background: burlywood;
+    border: none;
+    color: black;
+    padding: 3px 10px;
+    font-size: 16px;
+    cursor: pointer;
+    right: 76%;
+    top: 10%;
+    width: 5%;
+}
+
+#bottombtn.active {
     display: none;
 }
 
-.uploaddiv.active {
-    display: block;
+#arrowdown {
+    width: 70%;
+    height: 10%;
 }
