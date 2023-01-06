@@ -222,6 +222,10 @@ h3.main_title {
     font-size: 25px;
 }
 
+#side-menu.fa-times {
+    display: none;
+}
+
 @media(max-width:991px) {
 
     #side-menu {
@@ -300,10 +304,6 @@ h3.main_title {
     .gallery{
         padding-left: 0px;
         padding-right: 10px;
-    }
-
-    .side-bar.active{
-        left: 0px;
     }
 }
 

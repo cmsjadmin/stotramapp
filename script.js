@@ -115,7 +115,7 @@ function execute() {
     })
         .then(function(response) {
                 result = response;
-                displayFiles(result);   
+                displayFiles(result); 
 
                 console.log("Response", response);
             },
@@ -149,15 +149,12 @@ menu.classList.toggle('fa-times');
 sideBar.classList.toggle('active');
 box.classList.toggle('active');
 storam_container.classList.toggle('active');
-signinout.classList.toggle('active');
 
 menu.onclick = () => {
     menu.classList.toggle('fa-times');
     sideBar.classList.toggle('active');
     box.classList.toggle('active');
     storam_container.classList.toggle('active');
-    signinout.classList.toggle('active');
-    bottombtn.classList.toggle('active');
 };
 
 let categoryBtn = document.querySelectorAll('.category .btn');
@@ -253,6 +250,15 @@ reset.onclick = () => {
     dataLang = null;
     console.log("Reset Button Click - dataLang dataCata ", dataLang, dataCata);
     element.innerHTML = `Search Stotram: `;
+}
+
+let sideBarResults = document.querySelector('.results');
+
+sideBarResults.onclick = () => {
+    menu.classList.toggle('fa-times');
+    sideBar.classList.toggle('active');
+    box.classList.toggle('active');
+    storam_container.classList.toggle('active');
 }
 
 function bottomFunction() {
