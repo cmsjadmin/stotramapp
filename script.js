@@ -90,11 +90,12 @@ function displayFiles(response) {
     if(gdapifiles && gdapifiles.length > 0){
         listContainer.innerHTML = '';
         for(var i=0; i < gdapifiles.length; i++){
+
             listContainer.innerHTML += `
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}">"${gdapifiles[i].name}"</a>
+                <a href="${gdapifiles[i].webViewLink}" target="_blank">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
             </span>
             </li>
             
@@ -239,27 +240,6 @@ langBtn.forEach(btn =>{
         }
     }
 });
-
-let reset = document.querySelector('.reset');
-
-reset.onclick = () => {
-    langBtn.forEach(remove => remove.classList.remove('active'));
-    categoryBtn.forEach(remove => remove.classList.remove('active'));
-    loadClient().then(execute);
-    dataCata = null;
-    dataLang = null;
-    console.log("Reset Button Click - dataLang dataCata ", dataLang, dataCata);
-    element.innerHTML = `Search Stotram: `;
-}
-
-let sideBarResults = document.querySelector('.results');
-
-sideBarResults.onclick = () => {
-    menu.classList.toggle('fa-times');
-    sideBar.classList.toggle('active');
-    box.classList.toggle('active');
-    storam_container.classList.toggle('active');
-}
 
 function bottomFunction() {
     sideBar.scrollTop = 100000;
