@@ -90,7 +90,6 @@ function displayFiles(response) {
     if(gdapifiles && gdapifiles.length > 0){
         listContainer.innerHTML = '';
         for(var i=0; i < gdapifiles.length; i++){
-
             listContainer.innerHTML += `
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
@@ -111,8 +110,8 @@ function execute() {
         includeTeamDriveItems: false,
         supportsAllDrives: true,
         supportsTeamDrives: false,
-        'q': "'1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents",
-        fields: 'files(id, name, webViewLink, description)'
+        'q': "mimeType='application/pdf' and '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents",
+        fields: 'files(id, name, webViewLink)'
     })
         .then(function(response) {
                 result = response;
@@ -129,11 +128,12 @@ function searchfiles() {
     return gapi.client.drive.files.list({
         includeItemsFromAllDrives: true,
         supportsAllDrives: true,
-        q: `name contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
-        fields: 'files(id, name, webViewLink, description)'
+        q: `mimeType='application/pdf' and name contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
+        fields: 'files(id, name, webViewLink)'
     }).then(function(response) {
         if(value == ''){
             element.innerHTML = `Search Stotram: `;
+            displayFiles(response);
         } else {
             displayFiles(response);
             element.innerHTML = `Search: ${value}`;
@@ -175,8 +175,8 @@ categoryBtn.forEach(btn =>{
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-                fields: 'files(id, name, webViewLink, description)'
+                q: `mimeType='application/pdf' and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink)'
             }).then(function(response){
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataCata}`;
@@ -188,8 +188,8 @@ categoryBtn.forEach(btn =>{
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-                fields: 'files(id, name, webViewLink, description)'
+                q: `mimeType='application/pdf' and name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink)'
             }).then(function(response){
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
@@ -216,8 +216,8 @@ langBtn.forEach(btn =>{
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-                fields: 'files(id, name, webViewLink, description)'
+                q: `mimeType='application/pdf' and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink)'
             }).then(function(response){
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang}`;
@@ -229,8 +229,8 @@ langBtn.forEach(btn =>{
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-                fields: 'files(id, name, webViewLink, description)'
+                q: `mimeType='application/pdf' and name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                fields: 'files(id, name, webViewLink)'
             }).then(function(response){
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;

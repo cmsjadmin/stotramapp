@@ -101,7 +101,6 @@ html{
     overflow-y: scroll;
 }
 
-
 .side-bar::-webkit-scrollbar {
     width: 5px;
 }
@@ -162,14 +161,8 @@ html{
     cursor: pointer;
     font-size: 17px;
     text-align: center;
-    padding: 10px 30px;
+    padding: 10px 12px;
     text-transform: capitalize;
-}
-
-.side-bar .box .category .btn {
-    display: inline-block;
-    width: 42%;
-    padding: 6px;
 }
 
 .side-bar .box .btn.active {
@@ -180,7 +173,6 @@ html{
 .side-bar .box .btn img {
     width: 100%;
     height: 100%;
-    border-radius: 10%;
 }
 
 #side-menu {
@@ -307,6 +299,10 @@ h3.main_title {
     .gallery{
         padding-left: 0px;
         padding-right: 10px;
+    }
+
+    .side-bar.active{
+        left: 0px;
     }
 }
 
