@@ -166,6 +166,7 @@ html{
     text-align: center;
     padding: 10px 12px;
     text-transform: capitalize;
+    display: inline-block;
 }
 
 .side-bar .box .btn.active {
