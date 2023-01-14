@@ -97,7 +97,7 @@ function displayFiles(response) {
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}" target="_blank">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
+                <a href="${gdapifiles[i].webViewLink}">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
             </span>
             </li>
             
