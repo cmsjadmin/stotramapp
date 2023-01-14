@@ -1,7 +1,9 @@
 :root {
     --border:1px solid rgb(0, 0, 0);
     --crimson:rgb(220, 20, 60);
-    --white:#fff;
+    --white: #fff;
+    --secondary-color: black;
+    --primary-color: white;
     --cadetblue: cadetblue;
     --box-shadow:0 5px 10px rgba(0,0,0,.1);
     --black:#333;
@@ -30,12 +32,12 @@ html{
 } */
 
 .gallery .storam-container ul li {
-    background-color: white;
+    background-color: var(--primary-color);
     color: white;
     display: inline-block;
     padding: 3px 10px 20px 21px;
-    border: 3px solid black;
-    width: 95%;
+    border: 3px solid var(--secondary-color);
+    width: fit-content;
     overflow: hidden;
 }
 
@@ -97,7 +99,7 @@ html{
     width: 20%;
     background-color: orange;
     padding: 20px;
-    height: 95%;
+    height: -webkit-fill-available;
     overflow-y: scroll;
 }
 
@@ -128,7 +130,7 @@ html{
 .gallery .box {
     position: relative;
     right: -40px;
-    width: 100%;
+    width: fit-content;
 }
 
 .side-bar .box {
@@ -148,16 +150,17 @@ html{
     border-radius: 60px;
     border: thick;
     font-size: 14px;
-    color: black;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     text-transform: none;
 }
 
 .side-bar .box .btn {
     border-radius: 20px;
-    margin-top: 10px;
+    margin-bottom: 10px;
     margin-left: 10px;
-    background-color: white;
-    color: black;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
     cursor: pointer;
     font-size: 17px;
     text-align: center;
@@ -167,7 +170,7 @@ html{
 
 .side-bar .box .btn.active {
     background-color: var(--crimson);
-    color: var(--white);
+    color: var(--secondary-color);
 }
 
 .side-bar .box .btn img {
@@ -183,8 +186,8 @@ html{
     width: 20px;
     line-height: 20px;
     font-size: 20px;
-    color: var(--black);
-    background-color: var(--white);
+    color: var(--secondary-color);
+    background-color: var(--primary-color);
     border: var(--border);
     box-shadow: var(--box-shadow);
     text-align: center;
@@ -265,18 +268,6 @@ h3.main_title {
         padding-left: 20px;
     }
 
-    .gallery .storam-container ul li {
-        list-style: none;
-        background-color: white;
-        color: white;
-        display: inline-block;
-        padding: 3px 256px 23px 21px;
-        width: 60%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
 }
 
 @media(max-width:2560px) {
@@ -327,17 +318,6 @@ h3.main_title {
         right: 100px;
     }
 
-    .gallery .storam-container ul li {
-        list-style: none;
-        background-color: white;
-        color: white;
-        padding: 3px 20px 23px 21px;
-        width: 95%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
-
 }
 
 
@@ -360,35 +340,11 @@ h3.main_title {
         right: 100px;
     }
 
-    .gallery .storam-container ul li {
-        list-style: none;
-        background-color: white;
-        color: white;
-        display:block;
-        width: 95%;
-        padding: 3px 3px 3px 3px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
     #bottombtn {
         right: 60px;
         width: 28%;
     }
 
-}
-
-@media(max-width: 800px) {
-    .gallery .storam-container ul li {
-        list-style: none;
-        background-color: white;
-        color: white;
-        padding: 14px 10px 31px 21px;
-        width: 95%;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
 }
 
 @media(max-width:392px) {
@@ -405,16 +361,6 @@ h3.main_title {
         right: 100px;
     }
 
-    .gallery .storam-container ul li {
-        list-style: none;
-        background-color: white;
-        color: white;
-        width: 95%;
-        padding: 3px 20px 23px 21px;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        overflow: hidden;
-    }
     h3.main_title {
         position: fixed;
         top: -1px;
@@ -487,4 +433,19 @@ button{
     font-size: 16px;
     cursor: pointer;
     right: 10%;
+}
+
+@keyframes spinner {
+    to { transform: rotate(360deg); }
+}
+.loading::before {
+    content: "";
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    margin-right: 0.5em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
 }

@@ -5,14 +5,12 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1"/>
     <title>Stotram App Test</title>  
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
+    <script src="https://kit.fontawesome.com/9a3deab300.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body a link="green" vlink="green">
 
-<div id="side-menu" class="fas fa-bars"></div>
+<div id="side-menu" class="fa-solid fa-house"></div>
 <div id="auth-button" style="display: none;">
     <button class="signin">Sign In</button>
     <button class="signout">Sign Out</button>
@@ -22,6 +20,7 @@
     <!-- <button id="bottombtn" onclick="bottomFunction()"><img id="arrowdown" src="https://cdn-icons-png.flaticon.com/512/2722/2722987.png"></button> -->
     <a id="signinfirst_box22">Sign In To See Category And Language</a>
     <div class="box22">
+        <div id="settings" class="fa-solid fa-gear" style="text-align: left;scale: 1.5;cursor: pointer;"></div>
         <h3 class="title">Stotram App</h3>
     </div>
 
@@ -32,21 +31,30 @@
             <div class="btn" data-lang="Sanskrit">Sanskrit</div>
         </div>
     </div>
-
+    
     <div class="box active">
         <h3 class="title">Category: </h3>
         <div class="category" style="column-count: 2;">
-            <div class="btn" data-category="Bhagavad Geeta"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Krishna_tells_Gita_to_Arjuna.jpg" alt="logo">Bhagavad Geeta</div>
-            <div class="btn" data-category="Devi">Devi</div>
-            <div class="btn" data-category="Ganesha"><img src="https://upload.wikimedia.org/wikipedia/en/f/f9/Original_Ganesha_illustration.PNG" alt="logo">Ganesha</div>
-            <div class="btn" data-category="Guru">Guru</div>
-            <div class="btn" data-category="Hanuman"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Statue_of_Lord_Hanuman_at_Dharwad.jpg" alt="logo">Hanuman</div>
-            <div class="btn" data-category="Krishna"><img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Radha_Krishna_2.jpg" alt="logo">Krishna</div>
-            <div class="btn" data-category="Rama"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Statue_of_Rama_in_Kangra_district_of_Himachal_Pradesh.jpg" alt="logo">Rama</div>
-            <div class="btn" data-category="Shiva"><img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Lord_shiva.JPG" alt="logo">Shiva</div>
-            <div class="btn" data-category="Vishnu"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Lord_Vishnu_image.jpg" alt="logo">Vishnu</div>
+            <!-- <div class="btn" data-category="Bhagavad Geeta"><img src="https://upload.wikimedia.org/wikipedia/commons/b/b0/Krishna_tells_Gita_to_Arjuna.jpg" alt="logo">Bhagavad Geeta</div> -->
+            <!-- <div class="btn" data-category="Devi">Devi</div> -->
+            <div class="btn" data-category="Ganesha"><img src="Ganesha.jpg" alt="logo">Ganesha</div>
+            <div class="btn" data-category="Guru"><img src="Guru.jpg">Guru</div>
+            <!-- <div class="btn" data-category="Hanuman"><img src="https://upload.wikimedia.org/wikipedia/commons/1/16/Statue_of_Lord_Hanuman_at_Dharwad.jpg" alt="logo">Hanuman</div> -->
+            <div class="btn" data-category="Krishna"><img src="Krishna.jpg" alt="logo">Krishna</div>
+            <!-- <div class="btn" data-category="Rama"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Statue_of_Rama_in_Kangra_district_of_Himachal_Pradesh.jpg" alt="logo">Rama</div> -->
+            <div class="btn" data-category="Shiva"><img src="Lord Shiva.jpg" alt="logo">Shiva</div>
+            <!-- <div class="btn" data-category="Vishnu"><img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Lord_Vishnu_image.jpg" alt="logo">Vishnu</div> -->
         </div>
     </div>
+    
+    <div class="box">
+        <h3 class="title">Dark Mode: <input type="checkbox" id="check" onclick="changeStatus()"></input> </h3>
+    </div>
+
+    <div class="box">
+        <h3 class="title" style="text-align: center;">More Features Coming!</h3>
+    </div>
+    
 </div>
     
 <div class="gallery">
