@@ -316,11 +316,13 @@ function changeStatus() {
     var darkMode = getCookie("darkMode");
     if (darkMode === "true") {
         setCookie("darkMode", "false", 9999);
+        window.location.reload(true);
 
         root.style.setProperty('--primary-color', 'white');
         root.style.setProperty('--secondary-color', 'black');
     } else {
         setCookie("darkMode", "true", 9999);
+        window.location.reload(true);
 
         root.style.setProperty('--primary-color', 'black');
         root.style.setProperty('--secondary-color', 'white');
