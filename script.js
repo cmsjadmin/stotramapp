@@ -97,7 +97,7 @@ function displayFiles(response) {
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
+                <a href="${gdapifiles[i].webViewLink}" target="_blank">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
             </span>
             </li>
             
@@ -149,13 +149,15 @@ function searchfiles() {
 }
 }
 
-menu.classList.toggle('fa-times');
+menu.classList.toggle('fa-magnifying-glass');
+menu.classList.toggle('fa-house');
 sideBar.classList.toggle('active');
 box.classList.toggle('active');
 storam_container.classList.toggle('active');
 
 menu.onclick = () => {
-    menu.classList.toggle('fa-times');
+    menu.classList.toggle('fa-magnifying-glass');
+    menu.classList.toggle('fa-house');
     sideBar.classList.toggle('active');
     box.classList.toggle('active');
     storam_container.classList.toggle('active');
