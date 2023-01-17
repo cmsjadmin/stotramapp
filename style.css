@@ -10,8 +10,14 @@
     --dark-bg:rgba(0,0,0,.7);
 }
 
+@font-face {
+    font-family: 'Samarkan';
+    src: url(SamarkanNormal-Gg5D.ttf);
+}
+
 a {
     color: var(--secondary-color);
+    font-family: 'Samarkan';
 }
 
 html{
@@ -165,6 +171,7 @@ html{
     font-size: 17px;
     text-align: center;
     padding: 7%;
+    font-family: 'Samarkan';
     text-transform: capitalize;
     display: inline-block;
 }
@@ -227,9 +234,10 @@ h3.main_title {
     font-size: 25px;
 }
 
-#side-menu.fa-magnifying-glass {
-    left: 10px;
-    top: 10px;
+#side-menu.fa-arrow-right {
+    left: 90%;
+    top: 4px;
+    position: relative;
 }
 
 .side-bar.active{

@@ -149,14 +149,14 @@ function searchfiles() {
 }
 }
 
-menu.classList.toggle('fa-magnifying-glass');
+menu.classList.toggle('fa-arrow-right');
 menu.classList.toggle('fa-house');
 sideBar.classList.toggle('active');
 box.classList.toggle('active');
 storam_container.classList.toggle('active');
 
 menu.onclick = () => {
-    menu.classList.toggle('fa-magnifying-glass');
+    menu.classList.toggle('fa-arrow-right');
     menu.classList.toggle('fa-house');
     sideBar.classList.toggle('active');
     box.classList.toggle('active');
