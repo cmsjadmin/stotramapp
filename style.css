@@ -11,13 +11,14 @@
 }
 
 @font-face {
-    font-family: 'Samarkan';
-    src: url(SamarkanNormal-Gg5D.ttf);
+    font-family: 'Montserrat';
+    src: url(Montserrat-VariableFont_wght.ttf);
 }
 
 a {
     color: var(--secondary-color);
-    font-family: 'Samarkan';
+    font-family: 'Montserrat';
+    word-break: break-word;
 }
 
 html{
@@ -42,8 +43,9 @@ html{
     display: inline-block;
     padding: 3px 10px 20px 21px;
     border: 3px solid var(--secondary-color);
-    width: fit-content;
+    width: -webkit-fill-available;
     overflow: hidden;
+    word-wrap: break-word;
 }
 
 
@@ -171,14 +173,14 @@ html{
     font-size: 17px;
     text-align: center;
     padding: 7%;
-    font-family: 'Samarkan';
+    font-family: 'Montserrat';
     text-transform: capitalize;
     display: inline-block;
 }
 
 .side-bar .box .btn.active {
     background-color: var(--crimson);
-    color: var(--secondary-color);
+    color: var(--white);
 }
 
 .side-bar .box .btn img {
@@ -314,4 +316,29 @@ button{
     border-top-color: transparent;
     border-radius: 50%;
     animation: spinner 1s linear infinite;
+}
+
+#loader {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 1;
+    width: 120px;
+    height: 120px;
+    margin: -76px 0 0 -76px;
+    border: 16px solid var(--primary-color);
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    -webkit-animation: spin 2s linear infinite;
+    animation: spin 2s linear infinite;
+}
+  
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

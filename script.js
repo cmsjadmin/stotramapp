@@ -87,11 +87,16 @@ var expandContainer = document.querySelector('.expand-container');
 var expandContainerUl = document.querySelector('.expand-container ul');
 var listContainer = document.querySelector('.storam-container ul');
 
-function displayFiles(response) {
+function clearList() {
+    listContainer.innerHTML = '';
+}
+
+function displayFiles(response, clear=true) {
     // Handle the results here (response.result has the parsed body).
     gdapifiles = response.result.files;
     if(gdapifiles && gdapifiles.length > 0){
-        listContainer.innerHTML = '';
+        if(clear)
+            listContainer.innerHTML = '';
         for(var i=0; i < gdapifiles.length; i++){
             listContainer.innerHTML += `
             
@@ -149,18 +154,16 @@ function searchfiles() {
 }
 }
 
-menu.classList.toggle('fa-arrow-right');
-menu.classList.toggle('fa-house');
-sideBar.classList.toggle('active');
-box.classList.toggle('active');
-storam_container.classList.toggle('active');
-
-menu.onclick = () => {
+function showsideBar() {
     menu.classList.toggle('fa-arrow-right');
     menu.classList.toggle('fa-house');
     sideBar.classList.toggle('active');
     box.classList.toggle('active');
     storam_container.classList.toggle('active');
+}
+
+menu.onclick = () => {
+    showsideBar()
 };
 
 settings.onclick = () => {
@@ -178,38 +181,57 @@ let darkBtn = document.querySelectorAll('.dark_mode .btn');
 var dataLang;
 var dataCata;
 
+const map1 = new Map([
+    ['Guru', '1A8zAr9WoXFX-Mt5NeqdusXZHUCDtwP5E'],
+    ['Shiva', '1u2v706mDX5NHMyswikomMxUOQnk_YDzp']
+]);
+
+//map1.set('Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp');
+//map1.set('Hanuman', '1s7AVGqgpDnFmmqMglxdjwbogDOw4sP0v');
+
+
 categoryBtn.forEach(btn =>{
     btn.onclick = () => {
         categoryBtn.forEach(remove => remove.classList.remove('active'));
         btn.classList.add('active');
         dataCata = btn.getAttribute('data-category');
+        var dataCataID = map1.get(dataCata);
         console.log("Cata Button Click - dataLang dataCata ", dataLang, dataCata);
         if(dataLang == null) {
             console.log("datalang is null");
+            if(dataCataID != dataCata) {
+                element.innerHTML = `Search: ${dataCata}`;
+                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+            }
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                q: `mimeType='application/pdf' and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
+                console.log("DataCata=%s DataCataID=%s", dataCata, dataCataID);
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataCata}`;
                 console.log("Search Response", response);
             }),
-            function(err) {console.error("Execute error", err);};
+            function(err) {console.error("Execute error", err); clearList();};
         }
         else {
+            if(dataCataID != dataCata) {
+                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
+                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+            }
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataCata}" and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
             }),
-            function(err) {console.error("Execute error", err);};
+            function(err) {console.error("Execute error", err); clearList();};
         }
         
         
@@ -222,35 +244,54 @@ categoryBtn.forEach(btn =>{
 langBtn.forEach(btn =>{
     btn.onclick = () => {
         langBtn.forEach(remove => remove.classList.remove('active'));
+        clearList();
         dataLang = btn.getAttribute('data-lang');
         btn.classList.add('active');
-        console.log("Lang Button Click - dataLang dataCata ", dataLang, dataCata);
+        var dataCataID = map1.get(dataCata);
+        console.log("Lang Button Click - dataLang=%s", dataLang);
+        var fileList;
         if(dataCata == null) {
-            console.log("datalang is null");
-            return gapi.client.drive.files.list({
-                includeItemsFromAllDrives: true, 
-                supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataLang}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
-                fields: 'files(id, name, webViewLink)'
-            }).then(function(response){
-                displayFiles(response);
-                element.innerHTML = `Search: ${dataLang}`;
-                console.log("Search Response", response);
-            }),
-            function(err) {console.error("Execute error", err);};
+            console.log("dataCata is null");
+            map1.forEach(function(value, key) {
+                if(dataCataID != dataCata) {
+                    element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
+                    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+                }
+                return gapi.client.drive.files.list({
+                    includeItemsFromAllDrives: true, 
+                    supportsAllDrives: true,
+                    includeTeamDriveItems: true,
+                    q: `mimeType='application/pdf' and name contains "${dataLang}" and "${value}" in parents`,
+                    fields: 'files(id, name, webViewLink)',
+                    spaces: 'drive'
+                }).then(function(response){
+                    displayFiles(response, false);
+                    element.innerHTML = `Search: ${dataLang}`;  
+                    console.log("Search Response", response);
+                }),
+                function(err) {console.error("Execute error", err); clearList();};
+            });
+            
         }
         else {
+            clearList();
+            if(dataCataID != dataCata) {
+                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
+                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+            }
             return gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true, 
                 supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataLang}" and name contains "${dataCata}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`,
+                q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
+                console.log("DataLang=%s DataCataID=%s", dataLang, dataCataID);
+                clearList();
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
             }),
-            function(err) {console.error("Execute error", err);};
+            function(err) {console.error("Execute error", err); clearList();};
         }
     }
 });
@@ -307,6 +348,19 @@ window.addEventListener("DOMContentLoaded", function(){
         root.style.setProperty('--secondary-color', 'white');
         check.checked = true;
     }
+    document.getElementById('side-menu').style.display = "none";
+    const gallery = document.getElementsByClassName('gallery');
+    for (let i = 0; i < gallery.length; i++) {
+        gallery[i].style.display = "none";
+    }
+    setTimeout(() => {
+        document.getElementById('side-menu').style.display = "block";
+        for (let i = 0; i < gallery.length; i++) {
+            gallery[i].style.display = "block";
+        }
+        document.getElementById("loader").style.display = "none";
+        showsideBar();
+    }, 3000);
 });
 
 
