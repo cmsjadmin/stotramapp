@@ -102,7 +102,7 @@ html{
 .side-bar {
     position: absolute;
     top: 0; 
-    left: -350px;
+    display: none;
     width: 20%;
     background-color: orange;
     padding: 20px;
@@ -245,7 +245,7 @@ h3.main_title {
 .side-bar.active{
     width: -webkit-fill-available;
     height: -webkit-fill-available;
-    left: 0;
+    display: block;
 }
 
 #btn_filesync {

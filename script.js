@@ -88,7 +88,25 @@ var expandContainerUl = document.querySelector('.expand-container ul');
 var listContainer = document.querySelector('.storam-container ul');
 
 function clearList() {
-    listContainer.innerHTML = '';
+    listContainer.innerHTML = ' ';
+}
+
+function execute() {
+    return gapi.client.drive.files.list({
+        includeItemsFromAllDrives: true,
+        includeTeamDriveItems: false,
+        supportsAllDrives: true,
+        supportsTeamDrives: false,
+        'q': "mimeType='application/pdf' and '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents",
+        fields: 'files(id, name, webViewLink)'
+    })
+    .then(function(response) {
+        result = response;
+        displayFiles(result); 
+        
+        console.log("Response", response);
+    },
+    function(err) { console.error("Execute error", err); });
 }
 
 function displayFiles(response, clear=true) {
@@ -112,47 +130,79 @@ function displayFiles(response, clear=true) {
         listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
     }
 }
-function execute() {
-    return gapi.client.drive.files.list({
-        includeItemsFromAllDrives: true,
-        includeTeamDriveItems: false,
-        supportsAllDrives: true,
-        supportsTeamDrives: false,
-        'q': "mimeType='application/pdf' and '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents",
-        fields: 'files(id, name, webViewLink)'
-    })
-        .then(function(response) {
-                result = response;
-                displayFiles(result); 
 
-                console.log("Response", response);
-            },
-            function(err) { console.error("Execute error", err); });
-}
+const map1 = new Map([
+    ['Guru', '1A8zAr9WoXFX-Mt5NeqdusXZHUCDtwP5E'],
+    ['Shiva', '1u2v706mDX5NHMyswikomMxUOQnk_YDzp'],
+    ['Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp']
+]);
+
+let debounce = true;
+let previousSearchValue = "";
 
 function searchfiles() {
+    count=0;
     document.querySelector('#search-box').oninput = () => {
-        var value = document.querySelector('#search-box').value.toString();
-    return gapi.client.drive.files.list({
-        includeItemsFromAllDrives: true,
-        supportsAllDrives: true,
-        q: `mimeType='application/pdf' and name contains "${value}" and "1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D" in parents`, 
-        fields: 'files(id, name, webViewLink)'
-    }).then(function(response) {
-        if(value == ''){
-            element.innerHTML = `Search Stotram: `;
-            displayFiles(response);
-        } else {
-            displayFiles(response);
-            element.innerHTML = `Search: ${value}`;
-            langBtn.forEach(remove => remove.classList.remove('active'));
-            categoryBtn.forEach(remove => remove.classList.remove('active'));
-            console.log("Search Response", response);
+        var searchvalue = document.querySelector('#search-box').value.toString();
+        console.log("searchvalue=%s", searchvalue);
+    
+        document.getElementById("loader").style.display = "block";
+
+        searchInFolder(searchvalue);
+        
+        element.innerHTML = `Search: ${searchvalue}`;
+    }
+}
+
+function searchInFolder(searchvalue) {
+    var promises = []
+    for (let [folderName, folderId] of map1.entries()) {
+        promises.push(gapi.client.drive.files.list({
+            includeItemsFromAllDrives: true,
+            supportsAllDrives: true,
+            q: `mimeType='application/pdf' and name contains "${searchvalue}" and "${folderId}" in parents`, 
+            fields: 'files(id, name, webViewLink)'
+        }))
+    }
+    Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
+        var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+        displayFiles({ result: { files: combinedResults } });
+        langBtn.forEach(remove => remove.classList.remove('active'));
+        categoryBtn.forEach(remove => remove.classList.remove('active'));
+        document.getElementById("loader").style.display = "none";
+        if(searchvalue.length == 0) {
+            clearList();
+            listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+            element.innerHTML = `Search Stotram: ${searchvalue}`;
         }
-    }),
-    function(err) { console.error("Execute error", err);};
+    });
 }
-}
+
+// function searchInFolder(searchvalue) {
+//     if(searchvalue.length == 0) {
+//         clearList();
+//         listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+//         document.getElementById("loader").style.display = "none";
+//     }
+//     else {
+//         map1.forEach(function(value, key) {
+            
+//             return gapi.client.drive.files.list({
+//                 includeItemsFromAllDrives: true, 
+//                 supportsAllDrives: true,
+//                 includeTeamDriveItems: true,
+//                 q: `mimeType='application/pdf' and name contains "${searchvalue}" and "${value}" in parents`,
+//                 fields: 'files(id, name, webViewLink)',
+//                 spaces: 'drive'
+//             }).then(function(response){
+//                 displayFiles(response);
+//                 langBtn.forEach(remove => remove.classList.remove('active'));
+//                 categoryBtn.forEach(remove => remove.classList.remove('active'));
+//                 document.getElementById("loader").style.display = "none";
+//             });
+//         })
+//     }
+// }
 
 function showsideBar() {
     menu.classList.toggle('fa-arrow-right');
@@ -181,10 +231,6 @@ let darkBtn = document.querySelectorAll('.dark_mode .btn');
 var dataLang;
 var dataCata;
 
-const map1 = new Map([
-    ['Guru', '1A8zAr9WoXFX-Mt5NeqdusXZHUCDtwP5E'],
-    ['Shiva', '1u2v706mDX5NHMyswikomMxUOQnk_YDzp']
-]);
 
 //map1.set('Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp');
 //map1.set('Hanuman', '1s7AVGqgpDnFmmqMglxdjwbogDOw4sP0v');
@@ -362,7 +408,6 @@ window.addEventListener("DOMContentLoaded", function(){
         showsideBar();
     }, 3000);
 });
-
 
 if (getCookie("darkMode") === null) {
     setCookie("darkMode", "false", 9999);
