@@ -338,13 +338,6 @@ document.onkeydown = function (e) {
     }
 };
 
-if (navigator.userAgent.match(/Android/i)) {
-    window.location = "https://play.google.com/store/apps";
-} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-    window.location = "https://apps.apple.com/";
-}
-
-
 function setCookie(name, value, expires, path, domain, secure) {
     var cookie = name + "=" + escape(value) +
       ((expires) ? "; expires=" + expires : "") +
