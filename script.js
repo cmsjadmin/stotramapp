@@ -309,14 +309,6 @@ reset.onclick = () => {
     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
 }
 
-if (window.navigator.standalone) {
-  // This is not a standalone browser, it's running in a web view.
-} else if (navigator.userAgent.match(/Android/i)) {
-    window.location = "https://play.google.com/store/apps";
-} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
-    window.location = "https://apps.apple.com/";
-}
-
 darkBtn.forEach(btn => {
     btn.onclick = () => {
         darkBtn.forEach(remove => remove.classList.remove('active'));
