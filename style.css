@@ -176,6 +176,22 @@ html{
     font-family: 'Montserrat';
     text-transform: capitalize;
     display: inline-block;
+    vertical-align: top;
+}
+
+.btn2 {
+    border-radius: 20px;
+    margin-bottom: 10px;
+    margin-left: 10px;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+    cursor: pointer;
+    font-size: 17px;
+    text-align: center;
+    padding: 7%;
+    font-family: 'Montserrat';
+    text-transform: capitalize;
+    vertical-align: top;
 }
 
 .side-bar .box .btn.active {

@@ -36,11 +36,7 @@ function initClient(){
         driveId: DRIVE_ID,
         plugin_name: "Stotram Test APP"
     }).then(function(){
-        gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-        updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-        signinButton.onclick = handleSignin;
-        signoutButton.onclick = handleSignout;
+        loadClient().then(execute);
     }, function(error){
         console.error(error);
     })
@@ -51,36 +47,6 @@ function loadClient() {
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
-}
-
-function updateSigninStatus(isSignedIn){
-    if(isSignedIn) {
-        signinButton.style.display = 'none';
-        signoutButton.style.display = 'block';
-        loadClient().then(execute);
-        // button.classList.remove('active');
-        sideBarbox22.classList.remove('active');
-        sideBarbox.forEach(add => add.classList.add('active'));
-    } else {
-        signinButton.style.display = 'block';
-        signoutButton.style.display = 'none';
-        loadClient().then(execute);
-        // button.classList.add('active');
-        // sideBarbox22.classList.add('active');
-        // sideBarbox.forEach(remove => remove.classList.remove('active'));
-    }
-}
-
-function handleSignin() {
-    gapi.auth2.getAuthInstance().signIn();
-    langBtn.forEach(remove => remove.classList.remove('active'));
-    categoryBtn.forEach(remove => remove.classList.remove('active'));
-}
-
-function handleSignout() {
-    gapi.auth2.getAuthInstance().signOut();
-    langBtn.forEach(remove => remove.classList.remove('active'));
-    categoryBtn.forEach(remove => remove.classList.remove('active'));
 }
 
 var expandContainer = document.querySelector('.expand-container');
@@ -103,7 +69,13 @@ function execute() {
     .then(function(response) {
         result = response;
         displayFiles(result); 
-        
+        const gallery = document.getElementsByClassName('gallery');
+        document.getElementById("loader").style.display = "none";
+        document.getElementById('side-menu').style.display = "block";
+        showsideBar();
+        for (let i = 0; i < gallery.length; i++) {
+            gallery[i].style.display = "block";
+        }
         console.log("Response", response);
     },
     function(err) { console.error("Execute error", err); });
@@ -165,44 +137,20 @@ function searchInFolder(searchvalue) {
         }))
     }
     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-        var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
-        displayFiles({ result: { files: combinedResults } });
-        langBtn.forEach(remove => remove.classList.remove('active'));
-        categoryBtn.forEach(remove => remove.classList.remove('active'));
-        document.getElementById("loader").style.display = "none";
-        if(searchvalue.length == 0) {
+        if(searchvalue.length == 0 || searchvalue == "") {
             clearList();
             listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
             element.innerHTML = `Search Stotram: ${searchvalue}`;
+            document.getElementById("loader").style.display = "none";
+        } else {
+            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            displayFiles({ result: { files: combinedResults } });
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn.forEach(remove => remove.classList.remove('active'));
+            document.getElementById("loader").style.display = "none";
         }
     });
 }
-
-// function searchInFolder(searchvalue) {
-//     if(searchvalue.length == 0) {
-//         clearList();
-//         listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-//         document.getElementById("loader").style.display = "none";
-//     }
-//     else {
-//         map1.forEach(function(value, key) {
-            
-//             return gapi.client.drive.files.list({
-//                 includeItemsFromAllDrives: true, 
-//                 supportsAllDrives: true,
-//                 includeTeamDriveItems: true,
-//                 q: `mimeType='application/pdf' and name contains "${searchvalue}" and "${value}" in parents`,
-//                 fields: 'files(id, name, webViewLink)',
-//                 spaces: 'drive'
-//             }).then(function(response){
-//                 displayFiles(response);
-//                 langBtn.forEach(remove => remove.classList.remove('active'));
-//                 categoryBtn.forEach(remove => remove.classList.remove('active'));
-//                 document.getElementById("loader").style.display = "none";
-//             });
-//         })
-//     }
-// }
 
 function showsideBar() {
     menu.classList.toggle('fa-arrow-right');
@@ -230,10 +178,6 @@ let darkBtn = document.querySelectorAll('.dark_mode .btn');
 
 var dataLang;
 var dataCata;
-
-
-//map1.set('Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp');
-//map1.set('Hanuman', '1s7AVGqgpDnFmmqMglxdjwbogDOw4sP0v');
 
 
 categoryBtn.forEach(btn =>{
@@ -342,6 +286,29 @@ langBtn.forEach(btn =>{
     }
 });
 
+let reset = document.querySelector('.reset');
+
+reset.onclick = () => {
+    var startY = sideBar.scrollTop;
+    var endY = 0;
+    var distance = Math.abs(endY - startY);
+    var speed = 1;
+    var step = distance / speed;
+    var intervalId = setInterval(function() {
+      startY = startY + (endY > startY ? step : -step);
+      if (startY === endY) {
+        clearInterval(intervalId);
+      }
+      sideBar.scrollTop = startY;
+    }, 15);
+    langBtn.forEach(remove => remove.classList.remove('active'));
+    categoryBtn.forEach(remove => remove.classList.remove('active'));
+    element.innerHTML = `Search Stotram: `;
+    dataCata = null;
+    dataLang = null;
+    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+}
+
 darkBtn.forEach(btn => {
     btn.onclick = () => {
         darkBtn.forEach(remove => remove.classList.remove('active'));
@@ -371,6 +338,13 @@ document.onkeydown = function (e) {
     }
 };
 
+if (navigator.userAgent.match(/Android/i)) {
+    window.location = "https://play.google.com/store/apps";
+} else if (navigator.userAgent.match(/iPhone|iPad|iPod/i)) {
+    window.location = "https://apps.apple.com/";
+}
+
+
 function setCookie(name, value, expires, path, domain, secure) {
     var cookie = name + "=" + escape(value) +
       ((expires) ? "; expires=" + expires : "") +
@@ -399,14 +373,6 @@ window.addEventListener("DOMContentLoaded", function(){
     for (let i = 0; i < gallery.length; i++) {
         gallery[i].style.display = "none";
     }
-    setTimeout(() => {
-        document.getElementById('side-menu').style.display = "block";
-        for (let i = 0; i < gallery.length; i++) {
-            gallery[i].style.display = "block";
-        }
-        document.getElementById("loader").style.display = "none";
-        showsideBar();
-    }, 3000);
 });
 
 if (getCookie("darkMode") === null) {
