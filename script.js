@@ -229,9 +229,10 @@ var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 if (isIOS) {
   // get a reference to the button element
   var button = document.getElementById("check");
+  var DM = document.getElementById("DM");
 
   // hide the button by setting the display property to "none"
-  button.style.display = "none";
+  DM.style.display = "none";
 }
 
 let categoryBtn = document.querySelectorAll('.category .btn');
