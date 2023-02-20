@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,6 +7,7 @@
     <title>Stotram App Test</title>  
     <script src="https://kit.fontawesome.com/9a3deab300.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
 </head>
 <body>
 
@@ -54,6 +55,17 @@
 
     <div class="box">
         <h3 class="title" id="DM">Dark Mode: <input type="checkbox" id="check" onclick="changeStatus()"></input> </h3>
+    </div>
+
+    <div class="box">
+        <button id="feedback-button">Give Feedback</button>
+        <div id="feedback-form" style="display:none;">
+          <h3 class="title" style="color: var(--secondary-color);position: relative;margin: 0.3%;">Feedback Form <button id="close-btn" style="background-color: var(--primary-color);color: var(--secondary-color);position: relative;top: 5%;right: 0%;"><i class="fas fa-times" aria-hidden="true"></i></button></h3>
+          <form id="feedback-form-content">
+              <textarea id="feedback-text" rows="5" placeholder="Enter your feedback here..." style="width: -webkit-fill-available;background-color: var(--primary-color);border-color: var(--secondary-color);color: var(--secondary-color);" spellcheck="false"></textarea>
+              <button type="submit" style="background-color: sandybrown;">Submit</button>
+          </form>
+        </div>        
     </div>
 
     <div class="box">

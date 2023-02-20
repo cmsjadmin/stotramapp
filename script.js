@@ -236,6 +236,50 @@ if (isIOS) {
   DM.style.display = "none";
 }
 
+// initialize EmailJS with your user ID
+emailjs.init("GMrN3VFPndRw4lAu-");
+
+var feedbackButton = document.getElementById("feedback-button");
+var feedbackForm = document.getElementById("feedback-form");
+var closeBtn = document.getElementById("close-btn");
+var feedbackFormContent = document.getElementById("feedback-form-content");
+var feedbackText = document.getElementById("feedback-text");
+
+feedbackButton.addEventListener("click", function() {
+  feedbackForm.style.display = "block";
+});
+
+closeBtn.addEventListener("click", function() {
+  feedbackForm.style.display = "none";
+});
+
+feedbackFormContent.addEventListener("submit", function(event) {
+    event.preventDefault();
+    var feedback = feedbackText.value.trim();
+    if (feedback !== "") { 
+      sendFeedback(feedback);
+      feedbackText.value = "";
+      feedbackForm.style.display = "none";
+    } else {
+      alert("Please enter your feedback before submitting.");
+    }
+  });  
+
+function sendFeedback(feedback) {
+  var templateParams = {
+    feedback: feedback,
+    from_name: "CMSJ Stotram App User"
+  };
+  emailjs.send("service_91yx94m", "template_qcxpfof", templateParams)
+    .then(function(response) {
+      console.log("SUCCESS!", response.status, response.text);
+      alert("Thanks for your feedback!");
+    }, function(error) {
+      console.log("FAILED...", error);
+      alert("There was an error sending your feedback. Please try again later.");
+    });
+}
+
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
 let darkBtn = document.querySelectorAll('.dark_mode .btn');
@@ -402,29 +446,40 @@ document.onkeydown = function (e) {
     }
 };
 
-function setCookie(name, value, expires, path, domain, secure) {
-    var cookie = name + "=" + escape(value) +
-      ((expires) ? "; expires=" + expires : "") +
-      ((path) ? "; path=" + path : "") +
-      ((domain) ? "; domain=" + domain : "") +
-      ((secure) ? "; secure" : "");
-    document.cookie = cookie;
-}
-  
-function getCookie(name) {
-    var value = "; " + document.cookie;
-    var parts = value.split("; " + name + "=");
-    if (parts.length == 2) return parts.pop().split(";").shift();
-    return null;
+const checkbox = document.querySelector('#check');
+
+// Check if prefers-color-scheme is dark
+if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+  document.documentElement.setAttribute('data-theme', 'dark');
+  checkbox.checked = true;
 }
 
+// Toggle prefers-color-scheme on checkbox change
+checkbox.addEventListener('change', function() {
+  if (this.checked) {
+    document.documentElement.setAttribute('data-theme', 'dark');
+  } else {
+    document.documentElement.removeAttribute('data-theme');
+  }
+});
+
+// function setCookie(name, value, expires, path, domain, secure) {
+//     var cookie = name + "=" + escape(value) +
+//       ((expires) ? "; expires=" + expires : "") +
+//       ((path) ? "; path=" + path : "") +
+//       ((domain) ? "; domain=" + domain : "") +
+//       ((secure) ? "; secure" : "");
+//     document.cookie = cookie;
+// }
+  
+// function getCookie(name) {
+//     var value = "; " + document.cookie;
+//     var parts = value.split("; " + name + "=");
+//     if (parts.length == 2) return parts.pop().split(";").shift();
+//     return null;
+// }
+
 window.addEventListener("DOMContentLoaded", function(){
-    var darkMode = getCookie("darkMode");
-    if (darkMode === "true") {
-        root.style.setProperty('--primary-color', 'black');
-        root.style.setProperty('--secondary-color', 'white');
-        check.checked = true;
-    }
     document.getElementById('side-menu').style.display = "none";
     const gallery = document.getElementsByClassName('gallery');
     for (let i = 0; i < gallery.length; i++) {
@@ -432,23 +487,22 @@ window.addEventListener("DOMContentLoaded", function(){
     }
 });
 
-if (getCookie("darkMode") === null) {
-    setCookie("darkMode", "false", 9999);
-}
+// if (getCookie("darkMode") === null) {
+//     setCookie("darkMode", "false", 9999);
+// }
 
-function changeStatus() {
-    var darkMode = getCookie("darkMode");
-    if (darkMode === "true") {
-        setCookie("darkMode", "false", 9999);
-        window.location.reload(true);
+// function changeStatus() {
+//     var darkMode = getCookie("darkMode");
+//     if (darkMode === "true") {
+//         setCookie("darkMode", "false", 9999);
+//         window.location.reload(true);
 
-        root.style.setProperty('--primary-color', 'white');
-        root.style.setProperty('--secondary-color', 'black');
-    } else {
-        setCookie("darkMode", "true", 9999);
-        window.location.reload(true);
-
-        root.style.setProperty('--primary-color', 'black');
-        root.style.setProperty('--secondary-color', 'white');
-    }
-}
+//         root.style.setProperty('--primary-color', 'white');
+//         root.style.setProperty('--secondary-color', 'black');
+//     } else {
+//         setCookie("darkMode", "true", 9999);
+//         window.location.reload(true);
+//         root.style.setProperty('--primary-color', 'black');
+//         root.style.setProperty('--secondary-color', 'white');
+//     }
+// }

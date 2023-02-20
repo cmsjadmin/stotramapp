@@ -264,6 +264,70 @@ h3.main_title {
     display: block;
 }
 
+#feedback-button {
+    border: none;
+    border-radius: 5px;
+    background-color: #007bff;
+    color: black;
+    cursor: pointer;
+}
+
+#feedback-form {
+    position: relative;
+    bottom: 50px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: var(--primary-color);
+    z-index: 1;
+}
+
+@media (prefers-color-scheme: dark) {
+    [data-theme="dark"] #loader {
+        border: 16px solid black !important;
+        border-top: 16px solid #3498db !important;
+    }
+    [data-theme="dark"] #feedback-form {
+        background-color: black;
+    }
+    [data-theme="dark"] .gallery .storam-container ul li {
+        background-color: black;
+        border: 3px solid white;
+    }
+    [data-theme="dark"] .gallery .box #search-box {
+        background-color: black;
+        color: white;
+    }
+    [data-theme="dark"] .side-bar .box .btn {
+        background-color: black;
+        color: white;
+    }
+    [data-theme="dark"] .btn2 {
+        background-color: black;
+        color: white;
+    }
+    [data-theme="dark"] #side-menu {
+        color: white;
+        background-color: black;
+    }
+    [data-theme="dark"] #feedback-form {
+        background-color: black;
+    }
+}
+
+textarea {
+    resize: vertical;
+    min-height: 60%;
+    max-height: 100%;
+}  
+
+textarea::placeholder {
+    color: var(--secondary-color);
+}
+
+textarea:focus {
+    outline: none;
+}
+
 #btn_filesync {
     border: none;
     padding: 15px 32px;
