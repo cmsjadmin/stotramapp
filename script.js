@@ -227,7 +227,7 @@ settings.onclick = () => {
 var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 var isWindows = navigator.userAgent.indexOf('Windows') > -1;
 
-if (isWindows) {
+if (isIOS) {
   // get a reference to the button element
   var button = document.getElementById("check");
   var DM = document.getElementById("DM");
