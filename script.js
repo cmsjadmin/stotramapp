@@ -227,14 +227,14 @@ settings.onclick = () => {
 var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 var isWindows = navigator.userAgent.indexOf('Windows') > -1;
 
-// if (isIOS) {
-//   // get a reference to the button element
-//   var button = document.getElementById("check");
-//   var DM = document.getElementById("DM");
+if (isIOS) {
+  // get a reference to the button element
+  var button = document.getElementById("check");
+  var DM = document.getElementById("DM");
 
-//   // hide the button by setting the display property to "none"
-//   DM.style.display = "none";
-// }
+  // hide the button by setting the display property to "none"
+  DM.style.display = "none";
+}
 
 // initialize EmailJS with your user ID
 emailjs.init("GMrN3VFPndRw4lAu-");
@@ -448,8 +448,9 @@ document.onkeydown = function (e) {
 
 const checkbox = document.querySelector('#check');
 
-// Check if prefers-color-scheme is dark
-if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+// Set initial state based on localStorage value
+const storedValue = localStorage.getItem('dark-mode');
+if (storedValue === 'dark') {
   document.documentElement.setAttribute('data-theme', 'dark');
   checkbox.checked = true;
 }
@@ -458,8 +459,10 @@ if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').match
 checkbox.addEventListener('change', function() {
   if (this.checked) {
     document.documentElement.setAttribute('data-theme', 'dark');
+    localStorage.setItem('dark-mode', 'dark');
   } else {
     document.documentElement.removeAttribute('data-theme');
+    localStorage.setItem('dark-mode', 'light');
   }
 });
 
