@@ -109,12 +109,63 @@ const map1 = new Map([
     ['Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp']
 ]);
 
-let debounce = true;
 let previousSearchValue = "";
+
+// function searchfiles() {
+//     count=0;
+//     document.querySelector('#search-box').oninput = () => {
+//         var searchvalue = document.querySelector('#search-box').value.toString();
+//         console.log("searchvalue=%s", searchvalue);
+    
+//         document.getElementById("loader").style.display = "block";
+
+//         searchInFolder(searchvalue);
+        
+//         element.innerHTML = `Search: ${searchvalue}`;
+//     }
+// }
+
+// function searchInFolder(searchvalue) {
+//     var promises = []
+//     for (let [folderName, folderId] of map1.entries()) {
+//         promises.push(gapi.client.drive.files.list({
+//             includeItemsFromAllDrives: true,
+//             supportsAllDrives: true,
+//             q: `mimeType='application/pdf' and name contains "${searchvalue}" and "${folderId}" in parents`, 
+//             fields: 'files(id, name, webViewLink)'
+//         }))
+//     }
+//     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
+//         if(searchvalue.length == 0 || searchvalue == "") {
+//             clearList();
+//             listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+//             element.innerHTML = `Search Stotram: ${searchvalue}`;
+//             document.getElementById("loader").style.display = "none";
+//         } else {
+//             var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+//             displayFiles({ result: { files: combinedResults } });
+//             langBtn.forEach(remove => remove.classList.remove('active'));
+//             categoryBtn.forEach(remove => remove.classList.remove('active'));
+//             document.getElementById("loader").style.display = "none";
+//         }
+//     });
+// }
+
+function debounce(fn, delay) {
+    let timeoutId;
+    return function(...args) {
+        if (timeoutId) {
+            clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+            fn(...args);
+        }, delay);
+    }
+}
 
 function searchfiles() {
     count=0;
-    document.querySelector('#search-box').oninput = () => {
+    document.querySelector('#search-box').oninput = debounce(() => {
         var searchvalue = document.querySelector('#search-box').value.toString();
         console.log("searchvalue=%s", searchvalue);
     
@@ -123,7 +174,7 @@ function searchfiles() {
         searchInFolder(searchvalue);
         
         element.innerHTML = `Search: ${searchvalue}`;
-    }
+    }, 200);
 }
 
 function searchInFolder(searchvalue) {
@@ -137,10 +188,10 @@ function searchInFolder(searchvalue) {
         }))
     }
     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-        if(searchvalue.length == 0 || searchvalue == "") {
+        if(searchvalue == "" || searchvalue.length <= 2) {
             clearList();
             listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-            element.innerHTML = `Search Stotram: ${searchvalue}`;
+            element.innerHTML = `Search Stotram: `;
             document.getElementById("loader").style.display = "none";
         } else {
             var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
@@ -171,6 +222,17 @@ settings.onclick = () => {
         sideBarbox.forEach(toggle => toggle.classList.toggle('active'));
     }, 500);
 };
+
+// detect if the user is on an iOS device
+var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+if (isIOS) {
+  // get a reference to the button element
+  var button = document.getElementById("check");
+
+  // hide the button by setting the display property to "none"
+  button.style.display = "none";
+}
 
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
