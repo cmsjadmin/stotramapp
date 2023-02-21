@@ -99,7 +99,7 @@ function displayFiles(response, clear=true) {
             `;
         } 
     } else {
-        listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+        listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
     }
 }
 
