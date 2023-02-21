@@ -447,7 +447,6 @@ document.onkeydown = function (e) {
     }
 };
 
-let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
 
 const htmlElement = document.getElementsByTagName('html')[0];
 const bodyElement = document.body;
@@ -472,7 +471,29 @@ function enableStylesheet(stylesheet) {
   }
 }
 
-// Get the dark mode buttons  
+
+let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
+
+let activeDMButton = localStorage.getItem('activeDMButton');
+if (activeDMButton == null) {
+  activeDMButton = "Light";
+  localStorage.setItem('activeDMButton', activeDMButton);
+}
+
+// Set the active button and corresponding CSS file
+darkMODEButton.forEach(btn => {
+  if (btn.getAttribute('data-DM') == activeDMButton) {
+    btn.classList.add("active");
+    if (activeDMButton == "Dark") {
+      disableStylesheets();
+      enableStylesheet("dark-mode.css");
+    } else {
+      disableStylesheets();
+      enableStylesheet("style.css");
+    }
+  }
+});
+
 // Add click handlers to the dark mode buttons
 darkMODEButton.forEach(btn => {
   btn.onclick = () => {
@@ -482,16 +503,15 @@ darkMODEButton.forEach(btn => {
     if (dataDM == "Dark") {
       disableStylesheets();
       enableStylesheet("dark-mode.css");
-    } else if (dataDM == "Light") {
+      localStorage.setItem('activeDMButton', 'Dark');
+    } else {
       disableStylesheets();
       enableStylesheet("style.css");
-    } else {
-        disableStylesheets();
-        enableStylesheet("style.css");
+      localStorage.setItem('activeDMButton', 'Light');
     }
   }
 });
-  
+
 
 // function setCookie(name, value, expires, path, domain, secure) {
 //     var cookie = name + "=" + escape(value) +
