@@ -457,25 +457,43 @@ document.onkeydown = function (e) {
 };
 
 const checkbox = document.querySelector('#check');
-const html = document.querySelector('html');
+const htmlElement = document.getElementsByTagName('html')[0];
 
-// Set initial state based on localStorage value
-const storedValue = localStorage.getItem('dark-mode');
-if (storedValue === 'dark') {
-  html.setAttribute('data-theme', 'dark');
-  checkbox.checked = true;
+function setDarkMode(value) {
+  if (value) {
+    htmlElement.setAttribute('data-theme', 'dark');
+    checkbox.checked = true;
+  } else {
+    htmlElement.removeAttribute('data-theme');
+    checkbox.checked = false;
+  }
+  localStorage.setItem('darkMode', value);
 }
 
-// Toggle dark mode on checkbox change
 checkbox.addEventListener('change', function() {
-  if (this.checked) {
-    html.setAttribute('data-theme', 'dark');
-    localStorage.setItem('dark-mode', 'dark');
-  } else {
-    html.removeAttribute('data-theme');
-    localStorage.setItem('dark-mode', 'light');
-  }
+  setDarkMode(checkbox.checked);
 });
+
+const isDarkMode = localStorage.getItem('darkMode') === 'true';
+if (isDarkMode || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+  setDarkMode(true);
+} else {
+  setDarkMode(false);
+}
+
+function updateCheckbox() {
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      checkbox.checked = true;
+    } else {
+      checkbox.checked = false;
+    }
+  }
+  
+// Call updateCheckbox when the page loads
+window.addEventListener("DOMContentLoaded", updateCheckbox);
+
+// Call updateCheckbox when the user changes their color scheme preference
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateCheckbox);
 
 
 // function setCookie(name, value, expires, path, domain, secure) {
