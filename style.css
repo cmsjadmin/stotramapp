@@ -16,7 +16,7 @@
 }
 
 a {
-    color: black;
+    color: var(--secondary-color);
     font-weight: bolder;
     font-family: 'Montserrat';
     word-break: break-word;
