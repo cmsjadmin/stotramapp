@@ -16,7 +16,8 @@
 }
 
 a {
-    color: var(--secondary-color);
+    color: black;
+    font-weight: bolder;
     font-family: 'Montserrat';
     word-break: break-word;
 }
@@ -312,6 +313,24 @@ h3.main_title {
     [data-theme="dark"] #feedback-form {
         background-color: black;
     }
+    [data-theme="dark"] #feedback-text {
+        background-color: black !important;
+        color: white !important;
+        border-color: white !important;
+    }
+    [data-theme="dark"] a {
+        color: white;
+    }
+    [data-theme="dark"] #titlefeed {
+        color: white !important;
+    }
+    [data-theme="dark"] #close-btn {
+        color: white !important;
+        background-color: black !important;
+    }
+    [data-theme="dark"] textarea::placeholder {
+        color: white !important;
+    }
 }
 
 textarea {
@@ -321,7 +340,7 @@ textarea {
 }  
 
 textarea::placeholder {
-    color: var(--secondary-color);
+    color: black;
 }
 
 textarea:focus {
