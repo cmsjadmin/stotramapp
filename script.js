@@ -204,15 +204,21 @@ function searchInFolder(searchvalue) {
 }
 
 function showsideBar() {
-    menu.classList.toggle('fa-arrow-right');
-    menu.classList.toggle('fa-house');
+    menu.classList.toggle('hidden');
     sideBar.classList.toggle('active');
     box.classList.toggle('active');
     storam_container.classList.toggle('active');
 }
 
 menu.onclick = () => {
-    showsideBar()
+    showsideBar();
+};
+
+let resultmain = document.querySelector('.Results');
+
+
+resultmain.onclick = () => {
+    showsideBar();
 };
 
 settings.onclick = () => {
@@ -284,6 +290,10 @@ let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
 let darkBtn = document.querySelectorAll('.dark_mode .btn');
 
+const autoscroll = () => {
+    sideBar.scrollTo(0,9999);
+};  
+
 var dataLang;
 var dataCata;
 
@@ -325,6 +335,7 @@ categoryBtn.forEach(btn =>{
                 q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
+                autoscroll();
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
@@ -336,8 +347,6 @@ categoryBtn.forEach(btn =>{
        
     }
 });
-
-
 
 langBtn.forEach(btn =>{
     btn.onclick = () => {
@@ -383,6 +392,7 @@ langBtn.forEach(btn =>{
                 q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
+                autoscroll();
                 console.log("DataLang=%s DataCataID=%s", dataLang, dataCataID);
                 clearList();
                 displayFiles(response);
@@ -447,24 +457,26 @@ document.onkeydown = function (e) {
 };
 
 const checkbox = document.querySelector('#check');
+const html = document.querySelector('html');
 
 // Set initial state based on localStorage value
 const storedValue = localStorage.getItem('dark-mode');
 if (storedValue === 'dark') {
-  document.documentElement.setAttribute('data-theme', 'dark');
+  html.setAttribute('data-theme', 'dark');
   checkbox.checked = true;
 }
 
-// Toggle prefers-color-scheme on checkbox change
+// Toggle dark mode on checkbox change
 checkbox.addEventListener('change', function() {
   if (this.checked) {
-    document.documentElement.setAttribute('data-theme', 'dark');
+    html.setAttribute('data-theme', 'dark');
     localStorage.setItem('dark-mode', 'dark');
   } else {
-    document.documentElement.removeAttribute('data-theme');
+    html.removeAttribute('data-theme');
     localStorage.setItem('dark-mode', 'light');
   }
 });
+
 
 // function setCookie(name, value, expires, path, domain, secure) {
 //     var cookie = name + "=" + escape(value) +
