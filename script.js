@@ -456,7 +456,7 @@ function disableStylesheets() {
   var i, link;
   for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
     if (link.getAttribute("rel").endsWith("stylesheet")) {
-      link.disabled = true;
+      link.removeAttribute("disabled");
     }
   }
 }
