@@ -2,8 +2,8 @@
     --border:1px solid rgb(0, 0, 0);
     --crimson:rgb(220, 20, 60);
     --white: #fff;
-    --secondary-color: black;
-    --primary-color: white;
+    --secondary-color: white;
+    --primary-color: black;
     --cadetblue: cadetblue;
     --box-shadow:0 5px 10px rgba(0,0,0,.1);
     --black:#333;
@@ -285,7 +285,7 @@ textarea {
 }  
 
 textarea::placeholder {
-    color: black;
+    color: var(--secondary-color);
 }
 
 textarea:focus {
@@ -322,7 +322,7 @@ textarea:focus {
 
 button{
     border: none;
-    color: black;
+    color: var(--secondary-color);
     padding: 14px 28px;
     font-size: 16px;
     cursor: pointer;

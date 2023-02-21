@@ -288,7 +288,6 @@ function sendFeedback(feedback) {
 
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
-let darkBtn = document.querySelectorAll('.dark_mode .btn');
 
 const autoscroll = () => {
     sideBar.scrollTo(0,9999);
@@ -356,7 +355,6 @@ langBtn.forEach(btn =>{
         btn.classList.add('active');
         var dataCataID = map1.get(dataCata);
         console.log("Lang Button Click - dataLang=%s", dataLang);
-        var fileList;
         if(dataCata == null) {
             console.log("dataCata is null");
             map1.forEach(function(value, key) {
@@ -427,13 +425,6 @@ reset.onclick = () => {
     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
 }
 
-darkBtn.forEach(btn => {
-    btn.onclick = () => {
-        darkBtn.forEach(remove => remove.classList.remove('active'));
-        btn.classList.add('active');
-    }
-});
-
 function bottomFunction() {
     sideBar.scrollTop = 100000;
 }
@@ -456,45 +447,51 @@ document.onkeydown = function (e) {
     }
 };
 
-const checkbox = document.querySelector('#check');
+let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
+
 const htmlElement = document.getElementsByTagName('html')[0];
+const bodyElement = document.body;
 
-function setDarkMode(value) {
-  if (value) {
-    htmlElement.setAttribute('data-theme', 'dark');
-    checkbox.checked = true;
-  } else {
-    htmlElement.removeAttribute('data-theme');
-    checkbox.checked = false;
-  }
-  localStorage.setItem('darkMode', value);
-}
-
-checkbox.addEventListener('change', function() {
-  setDarkMode(checkbox.checked);
-});
-
-const isDarkMode = localStorage.getItem('darkMode') === 'true';
-if (isDarkMode || (!('darkMode' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-  setDarkMode(true);
-} else {
-  setDarkMode(false);
-}
-
-function updateCheckbox() {
-    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      checkbox.checked = true;
-    } else {
-      checkbox.checked = false;
+// Function to disable all stylesheets
+function disableStylesheets() {
+  var i, link;
+  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+    if (link.getAttribute("rel").endsWith("stylesheet")) {
+      link.disabled = true;
     }
   }
+}
+
+// Function to enable a specific stylesheet
+function enableStylesheet(stylesheet) {
+  var i, link;
+  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+    if (link.getAttribute("href").endsWith(stylesheet)) {
+      link.disabled = false;
+    }
+  }
+}
+
+// Get the dark mode buttons  
+// Add click handlers to the dark mode buttons
+darkMODEButton.forEach(btn => {
+  btn.onclick = () => {
+    darkMODEButton.forEach(remove => remove.classList.remove('active'));
+    btn.classList.add("active");
+    dataDM = btn.getAttribute('data-DM');
+    if (dataDM == "Dark") {
+      disableStylesheets();
+      enableStylesheet("dark-mode.css");
+    } else if (dataDM == "Light") {
+      disableStylesheets();
+      enableStylesheet("style.css");
+    } else {
+        disableStylesheets();
+        enableStylesheet("style.css");
+    }
+  }
+});
   
-// Call updateCheckbox when the page loads
-window.addEventListener("DOMContentLoaded", updateCheckbox);
-
-// Call updateCheckbox when the user changes their color scheme preference
-window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', updateCheckbox);
-
 
 // function setCookie(name, value, expires, path, domain, secure) {
 //     var cookie = name + "=" + escape(value) +
