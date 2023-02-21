@@ -474,10 +474,10 @@ function enableStylesheet(stylesheet) {
 
 let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
 
-let activeDMButton = localStorage.getItem('activeDMButton');
+let activeDMButton = localStorage.getItem('data-DM');
 if (activeDMButton == null) {
   activeDMButton = "Light";
-  localStorage.setItem('activeDMButton', activeDMButton);
+  localStorage.setItem('data-DM', activeDMButton);
 }
 
 // Set the active button and corresponding CSS file
@@ -503,11 +503,15 @@ darkMODEButton.forEach(btn => {
     if (dataDM == "Dark") {
       disableStylesheets();
       enableStylesheet("dark-mode.css");
-      localStorage.setItem('activeDMButton', 'Dark');
+      localStorage.setItem("data-DM", "Dark");
+    } else if (dataDM == "Light") {
+      disableStylesheets();
+      enableStylesheet("style.css");
+      localStorage.setItem("data-DM", "Light");
     } else {
       disableStylesheets();
       enableStylesheet("style.css");
-      localStorage.setItem('activeDMButton', 'Light');
+      localStorage.setItem("data-DM", "Light");
     }
   }
 });
