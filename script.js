@@ -448,36 +448,32 @@ document.onkeydown = function (e) {
 };
 
 
-const htmlElement = document.getElementsByTagName('html')[0];
-const bodyElement = document.body;
+let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
+
+let activeDMButton = localStorage.getItem('activeDMButton');
+if (activeDMButton == null) {
+  activeDMButton = "Light";
+  localStorage.setItem('activeDMButton', activeDMButton);
+}
 
 // Function to disable all stylesheets
 function disableStylesheets() {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("rel").endsWith("stylesheet")) {
-      link.removeAttribute("disabled");
+    var i, link;
+    for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+      if (link.getAttribute("rel").endsWith("stylesheet")) {
+        link.disabled = true;
+      }
     }
   }
-}
-
+  
 // Function to enable a specific stylesheet
 function enableStylesheet(stylesheet) {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("href").endsWith(stylesheet)) {
-      link.disabled = false;
+    var i, link;
+    for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+        if (link.getAttribute("href").endsWith(stylesheet)) {
+        link.disabled = false;
+        }
     }
-  }
-}
-
-
-let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
-
-let activeDMButton = localStorage.getItem('data-DM');
-if (activeDMButton == null) {
-  activeDMButton = "Light";
-  localStorage.setItem('data-DM', activeDMButton);
 }
 
 // Set the active button and corresponding CSS file
@@ -503,15 +499,15 @@ darkMODEButton.forEach(btn => {
     if (dataDM == "Dark") {
       disableStylesheets();
       enableStylesheet("dark-mode.css");
-      localStorage.setItem("data-DM", "Dark");
+      localStorage.setItem('activeDMButton', 'Dark');
     } else if (dataDM == "Light") {
       disableStylesheets();
       enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
+      localStorage.setItem('activeDMButton', 'Light');
     } else {
       disableStylesheets();
       enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
+      localStorage.setItem('activeDMButton', 'Light');
     }
   }
 });
