@@ -451,26 +451,35 @@ document.onkeydown = function (e) {
 const htmlElement = document.getElementsByTagName('html')[0];
 const bodyElement = document.body;
 
-// Function to disable all stylesheets
-function disableStylesheets() {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("rel").endsWith("stylesheet")) {
-      link.disabled = true;
+// Function to disable all stylesheets except for a specific one
+function disableStylesheets(exceptStylesheet) {
+    var i, link;
+    for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+      if (link.getAttribute("rel").endsWith("stylesheet") && !link.getAttribute("href").endsWith(exceptStylesheet)) {
+        link.disabled = true;
+        if (link.getAttribute("href").endsWith("dark-mode.css")) {
+          document.body.style.backgroundColor = "orange";
+        }
+        setTimeout(() => {
+          if (link.getAttribute("href").endsWith("dark-mode.css")) {
+            document.body.style.backgroundColor = "";
+          }
+          enableStylesheet(exceptStylesheet);
+        }, 1);
+      }
     }
   }
-}
-
-// Function to enable a specific stylesheet
-function enableStylesheet(stylesheet) {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("href").endsWith(stylesheet)) {
-      link.disabled = false;
+  
+  // Function to enable a specific stylesheet and disable all the others
+  function enableStylesheet(stylesheet) {
+    disableStylesheets(stylesheet);
+    var i, link;
+    for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
+      if (link.getAttribute("href").endsWith(stylesheet)) {
+        link.disabled = false;
+      }
     }
   }
-}
-
 
 let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
 
@@ -498,25 +507,22 @@ darkMODEButton.forEach(btn => {
 
 // Add click handlers to the dark mode buttons
 darkMODEButton.forEach(btn => {
-  btn.onclick = () => {
-    darkMODEButton.forEach(remove => remove.classList.remove('active'));
-    btn.classList.add("active");
-    dataDM = btn.getAttribute('data-DM');
-    if (dataDM == "Dark") {
-      disableStylesheets();
-      enableStylesheet("dark-mode.css");
-      localStorage.setItem("data-DM", "Dark");
-    } else if (dataDM == "Light") {
-      disableStylesheets();
-      enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
-    } else {
-      disableStylesheets();
-      enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
+    btn.onclick = () => {
+      darkMODEButton.forEach(remove => remove.classList.remove('active'));
+      btn.classList.add("active");
+      dataDM = btn.getAttribute('data-DM');
+      if (dataDM == "Dark") {
+        enableStylesheet("dark-mode.css");
+        localStorage.setItem('activeDMButton', 'Dark');
+      } else if (dataDM == "Light") {
+        enableStylesheet("style.css");
+        localStorage.setItem('activeDMButton', 'Light');
+      } else {
+        enableStylesheet("style.css");
+        localStorage.setItem('activeDMButton', 'Light');
+      }
     }
-  }
-});
+  });
 
 
 // function setCookie(name, value, expires, path, domain, secure) {
