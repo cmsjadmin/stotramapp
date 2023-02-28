@@ -52,9 +52,24 @@ function loadClient() {
 var expandContainer = document.querySelector('.expand-container');
 var expandContainerUl = document.querySelector('.expand-container ul');
 var listContainer = document.querySelector('.storam-container ul');
+var folderContainer = document.querySelector('.category');
 
 function clearList() {
     listContainer.innerHTML = ' ';
+}
+function searchfolder() {
+    return gapi.client.drive.files.list({
+        includeItemsFromAllDrives: true,
+        includeTeamDriveItems: false,
+        supportsAllDrives: true,
+        supportsTeamDrives: false,
+        q: `'1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents and mimeType='application/vnd.google-apps.folder'`,
+        fields: 'files(id, name)'
+    }).then(function(response){
+        console.log("RESPONSE", response);
+        displayFolders(response);
+    }), 
+    function(err) { console.error("Execute error", err); };
 }
 
 function execute() {
@@ -73,6 +88,7 @@ function execute() {
         document.getElementById("loader").style.display = "none";
         document.getElementById('side-menu').style.display = "block";
         showsideBar();
+        searchfolder();
         for (let i = 0; i < gallery.length; i++) {
             gallery[i].style.display = "block";
         }
@@ -88,11 +104,12 @@ function displayFiles(response, clear=true) {
         if(clear)
             listContainer.innerHTML = '';
         for(var i=0; i < gdapifiles.length; i++){
+
             listContainer.innerHTML += `
             
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}">"${gdapifiles[i].name.split(".pdf")[0]}"</a>
+                <a href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>
             </span>
             </li>
             
@@ -103,9 +120,105 @@ function displayFiles(response, clear=true) {
     }
 }
 
+let categoryBtn2;
+
+
+function displayFolders(response, clear=true) {
+    // Handle the results here (response.result has the parsed body).
+    var gdapifolders = response.result.files;
+    if(gdapifolders && gdapifolders.length > 0){
+        if(clear)
+            folderContainer.innerHTML = '';
+        for(var i=0; i < gdapifolders.length; i++){
+
+            folderContainer.innerHTML += `
+            
+            <div data-category="${gdapifolders[i].name}" class="btn"><img src="${gdapifolders[i].name}.jpg">${gdapifolders[i].name}</div>
+            
+            `;
+
+            map1.set(gdapifolders[i].name, gdapifolders[i].id);
+
+        } 
+
+        categoryBtn2 = document.querySelectorAll('.category .btn');
+
+        categoryBtn2.forEach(btn =>{
+            btn.onclick = () => {
+                categoryBtn2.forEach(remove => remove.classList.remove('active'));
+                btn.classList.add('active');
+                dataCata = btn.getAttribute('data-category');
+                var dataCataID = map1.get(dataCata);
+                console.log("Cata Button Click - dataLang dataCata ", dataLang, dataCata);
+                if(dataLang == null) {
+                    console.log("datalang is null");
+                    if(dataCataID != dataCata) {
+                        element.innerHTML = `Search: ${dataCata}`;
+                        listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+                    }
+                    return gapi.client.drive.files.list({
+                        includeItemsFromAllDrives: true, 
+                        supportsAllDrives: true,
+                        q: `mimeType='application/pdf' and "${dataCataID}" in parents`,
+                        fields: 'files(id, name, webViewLink)'
+                    }).then(function(response){
+                        console.log("DataCata=%s DataCataID=%s", dataCata, dataCataID);
+                        displayFiles(response);
+                        element.innerHTML = `Search: ${dataCata}`;
+                        console.log("Search Response", response);
+                    }),
+                    function(err) {console.error("Execute error", err); clearList();};
+                }
+                else {
+                    if(dataCataID != dataCata) {
+                        element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
+                        listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+                    }
+                    return gapi.client.drive.files.list({
+                        includeItemsFromAllDrives: true, 
+                        supportsAllDrives: true,
+                        q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
+                        fields: 'files(id, name, webViewLink)'
+                    }).then(function(response){
+                        document.getElementById("arrow-right").scrollIntoView();
+                        displayFiles(response);
+                        element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
+                        console.log("Search Response", response);
+                    }),
+                    function(err) {console.error("Execute error", err); clearList();};
+                }
+            }
+        });
+
+        let reset = document.querySelector('.reset');
+
+        reset.onclick = () => {
+            var startY = sideBar.scrollTop;
+            var endY = 0;
+            var distance = Math.abs(endY - startY);
+            var speed = 1;
+            var step = distance / speed;
+            var intervalId = setInterval(function() {
+            startY = startY + (endY > startY ? step : -step);
+            if (startY === endY) {
+                clearInterval(intervalId);
+            }
+            sideBar.scrollTop = startY;
+            }, 15);
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn2.forEach(remove => remove.classList.remove('active'));
+            element.innerHTML = `Search Stotram: `;
+            dataCata = null;
+            dataLang = null;
+            listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+        }
+
+    } else {
+        folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
+    }
+}
+
 const map1 = new Map([
-    ['Guru', '1A8zAr9WoXFX-Mt5NeqdusXZHUCDtwP5E'],
-    ['Shiva', '1u2v706mDX5NHMyswikomMxUOQnk_YDzp'],
     ['Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp']
 ]);
 
@@ -168,6 +281,8 @@ function searchfiles() {
     document.querySelector('#search-box').oninput = debounce(() => {
         var searchvalue = document.querySelector('#search-box').value.toString();
         console.log("searchvalue=%s", searchvalue);
+        dataCata = null;
+        dataLang = null;
     
         document.getElementById("loader").style.display = "block";
 
@@ -188,16 +303,18 @@ function searchInFolder(searchvalue) {
         }))
     }
     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-        if(searchvalue == "" || searchvalue.length <= 2) {
+        if(searchvalue.length <= 2) {
             clearList();
-            listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+            listContainer.innerHTML = '<div style="text-align: center;">Search for 3 or more letters</div>'
             element.innerHTML = `Search Stotram: `;
             document.getElementById("loader").style.display = "none";
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn2.forEach(remove => remove.classList.remove('active'));
         } else {
             var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
             displayFiles({ result: { files: combinedResults } });
             langBtn.forEach(remove => remove.classList.remove('active'));
-            categoryBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn2.forEach(remove => remove.classList.remove('active'));
             document.getElementById("loader").style.display = "none";
         }
     });
@@ -289,10 +406,6 @@ function sendFeedback(feedback) {
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
 
-const autoscroll = () => {
-    sideBar.scrollTo(0,9999);
-};  
-
 var dataLang;
 var dataCata;
 
@@ -334,7 +447,7 @@ categoryBtn.forEach(btn =>{
                 q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
-                autoscroll();
+                document.getElementById("arrow-right").scrollIntoView();
                 displayFiles(response);
                 element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                 console.log("Search Response", response);
@@ -390,7 +503,7 @@ langBtn.forEach(btn =>{
                 q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
-                autoscroll();
+                document.getElementById("arrow-right").scrollIntoView();
                 console.log("DataLang=%s DataCataID=%s", dataLang, dataCataID);
                 clearList();
                 displayFiles(response);
@@ -423,10 +536,6 @@ reset.onclick = () => {
     dataCata = null;
     dataLang = null;
     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-}
-
-function bottomFunction() {
-    sideBar.scrollTop = 100000;
 }
 
 document.addEventListener("contextmenu", function (e) {
@@ -480,16 +589,17 @@ if (activeDMButton == null) {
   localStorage.setItem('data-DM', activeDMButton);
 }
 
+
 // Set the active button and corresponding CSS file
 darkMODEButton.forEach(btn => {
     if (btn.getAttribute('data-DM') == activeDMButton) {
       btn.classList.add("active");
       if (activeDMButton == "Dark") {
-        disableStylesheets();
-        enableStylesheet("dark-mode.css");
+        root.style.setProperty('--primary-color', 'black');
+        root.style.setProperty('--secondary-color', 'white');
       } else {
-        disableStylesheets();
-        enableStylesheet("style.css");
+        root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--secondary-color', 'black');
       }
     } else {
       btn.classList.remove("active");
@@ -503,17 +613,17 @@ darkMODEButton.forEach(btn => {
     btn.classList.add("active");
     dataDM = btn.getAttribute('data-DM');
     if (dataDM == "Dark") {
-      disableStylesheets();
-      enableStylesheet("dark-mode.css");
-      localStorage.setItem("data-DM", "Dark");
+        root.style.setProperty('--primary-color', 'black');
+        root.style.setProperty('--secondary-color', 'white');
+        localStorage.setItem("data-DM", "Dark");
     } else if (dataDM == "Light") {
-      disableStylesheets();
-      enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
+        root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--secondary-color', 'black');
+        localStorage.setItem("data-DM", "Light");
     } else {
-      disableStylesheets();
-      enableStylesheet("style.css");
-      localStorage.setItem("data-DM", "Light");
+        root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--secondary-color', 'black');
+        localStorage.setItem("data-DM", "Light");
     }
   }
 });
