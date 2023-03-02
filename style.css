@@ -152,11 +152,24 @@ html{
     font-size: 17px;
     text-align: center;
     padding: 7%;
+    display: grid;
     font-family: 'Montserrat';
     text-transform: capitalize;
     display: inline-block;
     vertical-align: top;
 }
+
+@media screen and (orientation: portrait) {
+    .side-bar .box .btn {
+      text-align: center;
+    }
+  }
+  
+  @media screen and (orientation: landscape) {
+    .side-bar .box .btn {
+      text-align: left;
+    }
+  }  
 
 .category-btn {
     border-radius: 20px;
