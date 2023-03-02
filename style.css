@@ -84,7 +84,7 @@ html{
     width: 20%;
     background-color: orange;
     padding: 20px;
-    height: 100vh;
+    height: -webkit-fill-available;
     overflow-y: scroll;
 }
 
@@ -168,6 +168,9 @@ html{
 @media screen and (orientation: landscape) {
     .side-bar .box .btn {
         text-align: left;
+    }
+    .side-bar.active {
+        height: -webkit-fill-available !important;
     }
 }  
 
@@ -273,7 +276,7 @@ h3.main_title {
 
 .side-bar.active{
     width: -webkit-fill-available;
-    height: 100vh;
+    height: -webkit-fill-available;
     display: block;
 }
 
