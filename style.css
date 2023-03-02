@@ -84,7 +84,7 @@ html{
     width: 20%;
     background-color: orange;
     padding: 20px;
-    height: -webkit-fill-available;
+    height: 100vh;
     overflow-y: scroll;
 }
 
@@ -163,13 +163,13 @@ html{
     .side-bar .box .btn {
       text-align: center;
     }
-  }
+}
   
-  @media screen and (orientation: landscape) {
+@media screen and (orientation: landscape) {
     .side-bar .box .btn {
-      text-align: left;
+        text-align: left;
     }
-  }  
+}  
 
 .category-btn {
     border-radius: 20px;
