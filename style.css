@@ -273,7 +273,7 @@ h3.main_title {
 
 .side-bar.active{
     width: -webkit-fill-available;
-    height: -webkit-fill-available;
+    height: 100vh;
     display: block;
 }
 
