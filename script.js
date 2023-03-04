@@ -87,8 +87,8 @@ function execute() {
         const gallery = document.getElementsByClassName('gallery');
         document.getElementById("loader").style.display = "none";
         document.getElementById('side-menu').style.display = "block";
-        showsideBar();
         searchfolder();
+        showsideBar();
         for (let i = 0; i < gallery.length; i++) {
             gallery[i].style.display = "block";
         }
@@ -129,18 +129,37 @@ function displayFolders(response, clear=true) {
     if(gdapifolders && gdapifolders.length > 0){
         if(clear)
             folderContainer.innerHTML = '';
-        for(var i=0; i < gdapifolders.length; i++){
+
+        let promises = [];
+
+        for (var i = 0; i < gdapifolders.length; i++) {
+            promises.push(gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true,
+                supportsAllDrives: true,
+                q: `mimeType='image/jpeg' and "${gdapifolders[i].id}" in parents`,
+                fields: 'files(name)'
+            }).then(function (response) {
+                if (response && response.result && response.result.files.length > 0) {
+                    return `<img src="${response.result.files[0].name}"/>`;
+                } else {
+                    return '';
+                }
+            }));
 
             folderContainer.innerHTML += `
-            
-            <div data-category="${gdapifolders[i].name}" class="btn"><img src="${gdapifolders[i].name}.jpg">${gdapifolders[i].name}</div>
-            
+                <div data-category="${gdapifolders[i].name}" class="btn">${gdapifolders[i].name}</div>
             `;
-
+            
             map1.set(gdapifolders[i].name, gdapifolders[i].id);
+            }
 
-        } 
+            Promise.all(promises).then(function(imageTags) {
+            for (var i = 0; i < gdapifolders.length; i++) {
+                document.querySelector(`[data-category="${gdapifolders[i].name}"]`).innerHTML = `${imageTags[i]}${gdapifolders[i].name}`;
+            }
+        });
 
+            
         categoryBtn2 = document.querySelectorAll('.category .btn');
 
         categoryBtn2.forEach(btn =>{
@@ -214,7 +233,7 @@ function displayFolders(response, clear=true) {
         }
 
     } else {
-        folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
+        folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Categories Found!</div>'
     }
 }
 
