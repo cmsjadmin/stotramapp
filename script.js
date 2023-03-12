@@ -570,13 +570,13 @@ langBtn.forEach(btn =>{
 var t= new Date();
 panchang.calculate(t, function() {
     function alltime() {
-        document.getElementById("day").innerHTML="Today is: " + panchang.Day.name;
-        document.getElementById("tithi").innerHTML="Tithi is: " + panchang.Tithi.name;
-        document.getElementById("nakshtra").innerHTML="Nakshatra is: " + panchang.Nakshatra.name;
-        document.getElementById("karna").innerHTML="Karna is: " + panchang.Karna.name;
-        document.getElementById("yoga").innerHTML="Yoga is: " + panchang.Yoga.name;
-        document.getElementById("raasi").innerHTML="Raasi is: " + panchang.Raasi.name;
-        document.getElementById("ayanamsa").innerHTML="Ayanamsa is: " + panchang.Ayanamsa.name;
+        document.getElementById("day").innerHTML="Today: " + panchang.Day.name;
+        document.getElementById("tithi").innerHTML="Tithi: " + panchang.Tithi.name;
+        document.getElementById("nakshtra").innerHTML="Nakshatra: " + panchang.Nakshatra.name;
+        document.getElementById("karna").innerHTML="Karna: " + panchang.Karna.name;
+        document.getElementById("yoga").innerHTML="Yoga: " + panchang.Yoga.name;
+        document.getElementById("raasi").innerHTML="Raasi: " + panchang.Raasi.name;
+        document.getElementById("ayanamsa").innerHTML="Ayanamsa: " + panchang.Ayanamsa.name;
     }
 
     // function updateTime(){
