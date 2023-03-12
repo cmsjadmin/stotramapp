@@ -358,7 +358,7 @@ textarea {
 }  
 
 textarea::placeholder {
-    color: black;
+    color: lightgrey;
 }
 
 textarea:focus {
@@ -368,6 +368,10 @@ textarea:focus {
 .gallery .storam-container {
     padding: 0px 0px 10px;
     text-align: left;
+}
+
+::placeholder {
+    color: #999;
 }
 
 .gallery .box.active{
