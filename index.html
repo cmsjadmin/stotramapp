@@ -5,7 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
     <title>Stotram App Test</title>  
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@2.3.3/dist/purify.min.js"></script>
     <script src="https://kit.fontawesome.com/9a3deab300.js" crossorigin="anonymous"></script>
+    <script src="panchang.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css" id="theme">
     <script src="https://cdn.emailjs.com/sdk/2.3.2/email.min.js"></script>
 </head>
@@ -81,9 +83,22 @@
             </form>
         </div>        
     </div>
+    
+    <div class="box">
+        <h3 class="title">Panchang Calender: </h3>
+        <div class="category" style="column-count: 2;">
+            <div id='day' class="btn2" style="display: inline-table;"></div>
+            <div id=tithi class="btn2" style="display: inline-table;"></div>
+            <div id=nakshtra class="btn2" style="display: inline-table;"></div>
+            <div id=karna class="btn2" style="display: inline-table;"></div>
+            <div id=yoga class="btn2" style="display: inline-table;"></div>
+            <div id=raasi class="btn2" style="display: inline-table;"></div>
+            <div id=ayanamsa class="btn2" style="display: inline-table;"></div>
+        </div>
+    </div>
 
     <div class="box">
-        <h3 class="title" style="text-align: center;">More Features Coming!</h3>
+        <h3 class="title" style="display: block;text-align: center;">More Features Coming!</h3>
     </div>
     
 </div>
@@ -101,6 +116,7 @@
     </div>  
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="script.js"></script>
 <script async defer src="https://apis.google.com/js/api.js"></script>

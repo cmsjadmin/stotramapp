@@ -100,23 +100,22 @@ function execute() {
 function displayFiles(response, clear=true) {
     // Handle the results here (response.result has the parsed body).
     gdapifiles = response.result.files;
+    console.log(gdapifiles && gdapifiles.length);
     if(gdapifiles && gdapifiles.length > 0){
         if(clear)
             listContainer.innerHTML = '';
         for(var i=0; i < gdapifiles.length; i++){
-
             listContainer.innerHTML += `
-            
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>
+                <a href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>           
             </span>
             </li>
-            
             `;
         } 
     } else {
         listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
+        console.log(gdapifiles, gdapifiles.length);
     }
 }
 
@@ -154,12 +153,79 @@ function displayFolders(response, clear=true) {
             }
 
             Promise.all(promises).then(function(imageTags) {
-            for (var i = 0; i < gdapifolders.length; i++) {
-                document.querySelector(`[data-category="${gdapifolders[i].name}"]`).innerHTML = `${imageTags[i]}${gdapifolders[i].name}`;
-            }
-        });
+                for (var i = 0; i < gdapifolders.length; i++) {
+                  if (imageTags[i] !== '') {
+                    // Check if the image file exists in Github
+                    const imgTag = document.createElement('div');
+                    imgTag.innerHTML = imageTags[i];
+                    const imageFile = imgTag.firstChild.getAttribute('src').split('/').pop();
+                    const owner = 'cmsjadmin';
+                    const repo = 'stotramapp';
+                    const token = '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';
+              
+                    axios({
+                      method: 'get',
+                      url: `https://api.github.com/repos/${owner}/${repo}/contents/${imageFile}`,
+                      headers: {
+                        Authorization: `Bearer ${token}`,
+                        Accept: 'application/vnd.github.v3+json',
+                      },
+                    })
+                      .then((response) => {
+                        // If the file does not exist, upload it to Github
+                        if (response.status === 404) {
+                          // Get the URL of the image file from Google Drive
+                          const fileId = response.result.files[i].id;
+                          const accessToken = gapi.auth.getToken().access_token;
+                          const fileUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+                          const headers = { Authorization: `Bearer ${accessToken}` };
+              
+                          // Download the image file from the URL
+                          axios.get(fileUrl, {
+                            responseType: 'arraybuffer',
+                            headers: headers,
+                          })
+                            .then((downloadResponse) => {
+                              const fileContent = downloadResponse.data;
+              
+                              // Upload the image file to Github
+                              axios({
+                                method: 'put',
+                                url: `https://api.github.com/repos/${owner}/${repo}/contents/${imageFile}`,
+                                data: {
+                                  message: 'upload image',
+                                  content: fileContent.toString('base64'),
+                                },
+                                headers: {
+                                  Authorization: `Bearer ${token}`,
+                                  Accept: 'application/vnd.github.v3+json',
+                                },
+                              })
+                                .then((response) => {
+                                  console.log(`File ${response.data.content.name} uploaded to Github`);
+                                })
+                                .catch((error) => {
+                                  console.error('Error uploading file to Github', error);
+                                });
+                            })
+                            .catch((error) => {
+                              console.error('Error downloading image file', error);
+                            });
+                        } else {
+                          console.log(`File ${imageFile} already exists in Github`);
+                        }
+                      })
+                      .catch((error) => {
+                        console.error('Error checking file in Github', error);
+                      });
+                    } else {
+                        console.log("HELLO ITS NOT THERE IN GOOGLE DRIVE FOLDER");
+                    }
+              
+                  document.querySelector(`[data-category="${gdapifolders[i].name}"]`).innerHTML = `${imageTags[i]}${gdapifolders[i].name}`;
+                }
+            });                                                 
 
-            
         categoryBtn2 = document.querySelectorAll('.category .btn');
 
         categoryBtn2.forEach(btn =>{
@@ -209,28 +275,28 @@ function displayFolders(response, clear=true) {
             }
         });
 
-        let reset = document.querySelector('.reset');
+        // let reset = document.querySelector('.reset');
 
-        reset.onclick = () => {
-            var startY = sideBar.scrollTop;
-            var endY = 0;
-            var distance = Math.abs(endY - startY);
-            var speed = 1;
-            var step = distance / speed;
-            var intervalId = setInterval(function() {
-            startY = startY + (endY > startY ? step : -step);
-            if (startY === endY) {
-                clearInterval(intervalId);
-            }
-            sideBar.scrollTop = startY;
-            }, 15);
-            langBtn.forEach(remove => remove.classList.remove('active'));
-            categoryBtn2.forEach(remove => remove.classList.remove('active'));
-            element.innerHTML = `Search Stotram: `;
-            dataCata = null;
-            dataLang = null;
-            listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-        }
+        // reset.onclick = () => {
+        //     var startY = sideBar.scrollTop;
+        //     var endY = 0;
+        //     var distance = Math.abs(endY - startY);
+        //     var speed = 1;
+        //     var step = distance / speed;
+        //     var intervalId = setInterval(function() {
+        //     startY = startY + (endY > startY ? step : -step);
+        //     if (startY === endY) {
+        //         clearInterval(intervalId);
+        //     }
+        //     sideBar.scrollTop = startY;
+        //     }, 15);
+        //     langBtn.forEach(remove => remove.classList.remove('active'));
+        //     categoryBtn2.forEach(remove => remove.classList.remove('active'));
+        //     element.innerHTML = `Search Stotram: `;
+        //     dataCata = null;
+        //     dataLang = null;
+        //     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+        // }
 
     } else {
         folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Categories Found!</div>'
@@ -302,6 +368,8 @@ function searchfiles() {
         console.log("searchvalue=%s", searchvalue);
         dataCata = null;
         dataLang = null;
+
+        searchvalue = DOMPurify.sanitize(searchvalue);
     
         document.getElementById("loader").style.display = "block";
 
@@ -312,6 +380,15 @@ function searchfiles() {
 }
 
 function searchInFolder(searchvalue) {
+    if (!/^[a-z0-9\-]+$/i.test(searchvalue)) {
+        clearList();
+        listContainer.innerHTML = '<div style="text-align: center;">Search with only alphanumeric characters</div>'
+        element.innerHTML = `Search Stotram: `;
+        document.getElementById("loader").style.display = "none";
+        langBtn.forEach(remove => remove.classList.remove('active'));
+        categoryBtn2.forEach(remove => remove.classList.remove('active'));
+        return;
+    }
     var promises = []
     for (let [folderName, folderId] of map1.entries()) {
         promises.push(gapi.client.drive.files.list({
@@ -329,13 +406,19 @@ function searchInFolder(searchvalue) {
             document.getElementById("loader").style.display = "none";
             langBtn.forEach(remove => remove.classList.remove('active'));
             categoryBtn2.forEach(remove => remove.classList.remove('active'));
+        } else if (!/^[a-z0-9\-]+$/i.test(searchvalue)) {
+            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            displayFiles({ result: { files: combinedResults } });
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn2.forEach(remove => remove.classList.remove('active'));
+            document.getElementById("loader").style.display = "none";
         } else {
             var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
             displayFiles({ result: { files: combinedResults } });
             langBtn.forEach(remove => remove.classList.remove('active'));
             categoryBtn2.forEach(remove => remove.classList.remove('active'));
             document.getElementById("loader").style.display = "none";
-        }
+        }                        
     });
 }
 
@@ -396,6 +479,7 @@ closeBtn.addEventListener("click", function() {
 });
 
 feedbackFormContent.addEventListener("submit", function(event) {
+    feedbackFormContent = DOMPurify.sanitize(feedbackFormContent);
     event.preventDefault();
     var feedback = feedbackText.value.trim();
     if (feedback !== "") { 
@@ -428,57 +512,6 @@ let langBtn = document.querySelectorAll('.lang .btn');
 var dataLang;
 var dataCata;
 
-
-categoryBtn.forEach(btn =>{
-    btn.onclick = () => {
-        categoryBtn.forEach(remove => remove.classList.remove('active'));
-        btn.classList.add('active');
-        dataCata = btn.getAttribute('data-category');
-        var dataCataID = map1.get(dataCata);
-        console.log("Cata Button Click - dataLang dataCata ", dataLang, dataCata);
-        if(dataLang == null) {
-            console.log("datalang is null");
-            if(dataCataID != dataCata) {
-                element.innerHTML = `Search: ${dataCata}`;
-                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-            }
-            return gapi.client.drive.files.list({
-                includeItemsFromAllDrives: true, 
-                supportsAllDrives: true,
-                q: `mimeType='application/pdf' and "${dataCataID}" in parents`,
-                fields: 'files(id, name, webViewLink)'
-            }).then(function(response){
-                console.log("DataCata=%s DataCataID=%s", dataCata, dataCataID);
-                displayFiles(response);
-                element.innerHTML = `Search: ${dataCata}`;
-                console.log("Search Response", response);
-            }),
-            function(err) {console.error("Execute error", err); clearList();};
-        }
-        else {
-            if(dataCataID != dataCata) {
-                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-            }
-            return gapi.client.drive.files.list({
-                includeItemsFromAllDrives: true, 
-                supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
-                fields: 'files(id, name, webViewLink)'
-            }).then(function(response){
-                document.getElementById("arrow-right").scrollIntoView();
-                displayFiles(response);
-                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                console.log("Search Response", response);
-            }),
-            function(err) {console.error("Execute error", err); clearList();};
-        }
-        
-        
-       
-    }
-});
-
 langBtn.forEach(btn =>{
     btn.onclick = () => {
         langBtn.forEach(remove => remove.classList.remove('active'));
@@ -492,7 +525,6 @@ langBtn.forEach(btn =>{
             map1.forEach(function(value, key) {
                 if(dataCataID != dataCata) {
                     element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
                 }
                 return gapi.client.drive.files.list({
                     includeItemsFromAllDrives: true, 
@@ -500,11 +532,12 @@ langBtn.forEach(btn =>{
                     includeTeamDriveItems: true,
                     q: `mimeType='application/pdf' and name contains "${dataLang}" and "${value}" in parents`,
                     fields: 'files(id, name, webViewLink)',
-                    spaces: 'drive'
                 }).then(function(response){
-                    displayFiles(response, false);
-                    element.innerHTML = `Search: ${dataLang}`;  
-                    console.log("Search Response", response);
+                    if(response.result.files.length > 0) {
+                        displayFiles(response, false);
+                        element.innerHTML = `Search: ${dataLang}`;  
+                        console.log("Search Response", response);
+                    }
                 }),
                 function(err) {console.error("Execute error", err); clearList();};
             });
@@ -534,6 +567,84 @@ langBtn.forEach(btn =>{
     }
 });
 
+var t= new Date();
+panchang.calculate(t, function() {
+    function alltime() {
+        document.getElementById("day").innerHTML="Today is: " + panchang.Day.name;
+        document.getElementById("tithi").innerHTML="Tithi is: " + panchang.Tithi.name;
+        document.getElementById("nakshtra").innerHTML="Nakshatra is: " + panchang.Nakshatra.name;
+        document.getElementById("karna").innerHTML="Karna is: " + panchang.Karna.name;
+        document.getElementById("yoga").innerHTML="Yoga is: " + panchang.Yoga.name;
+        document.getElementById("raasi").innerHTML="Raasi is: " + panchang.Raasi.name;
+        document.getElementById("ayanamsa").innerHTML="Ayanamsa is: " + panchang.Ayanamsa.name;
+    }
+
+    // function updateTime(){
+    //     var t = new Date();
+    //     hours = t.getHours();
+    //     minutes = t.getMinutes();
+    //     if (hours == 12) {
+    //         ampm = "PM";
+    //     } else if (hours > 12) {
+    //         hours = hours - 12;
+    //         ampm = "PM";
+    //     } else {
+    //         ampm = "AM";
+    //     }
+    
+    //     if (hours == 0) {
+    //         hours = 12;
+    //     }
+    // }    
+
+    // document.addEventListener("DOMContentLoaded", function() {
+    //     setInterval(function(){
+    //         updateTime();
+    //     }, 1000);
+    //     intervalId = setInterval(function(){
+    //         document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+    //     }, 1000);
+    //     clearInterval(intervalId);
+    // });
+
+    alltime()
+
+    document.getElementById("tithi").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+        document.getElementById("tithi").innerHTML = "Tithi start: " + panchang.Tithi.start + "<br><br>Tithi end: " + panchang.Tithi.end;
+    });
+    document.getElementById("nakshtra").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+        document.getElementById("nakshtra").innerHTML = "Nakshtra start: " + panchang.Nakshatra.start + "<br><br>Nakshtra end: " + panchang.Nakshatra.end;
+    });
+    document.getElementById("karna").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+        document.getElementById("karna").innerHTML = "Karna start: " + panchang.Karna.start + "<br><br>Karna end: " + panchang.Karna.end;
+    });
+    document.getElementById("yoga").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+        document.getElementById("yoga").innerHTML = "Yoga start: " + panchang.Yoga.start + "<br><br>Yoga end: " + panchang.Yoga.end;
+    });
+    document.getElementById("day").addEventListener("click", function() {
+        alltime()
+        // intervalId = setInterval(function(){
+        //     document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+        // }, 500);
+    });
+    document.getElementById("raasi").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+    });
+    document.getElementById("ayanamsa").addEventListener("click", function() {
+        alltime()
+        clearInterval(intervalId);
+    });
+});
+
 let reset = document.querySelector('.reset');
 
 reset.onclick = () => {
@@ -550,7 +661,7 @@ reset.onclick = () => {
       sideBar.scrollTop = startY;
     }, 15);
     langBtn.forEach(remove => remove.classList.remove('active'));
-    categoryBtn.forEach(remove => remove.classList.remove('active'));
+    categoryBtn2.forEach(remove => remove.classList.remove('active'));
     element.innerHTML = `Search Stotram: `;
     dataCata = null;
     dataLang = null;
