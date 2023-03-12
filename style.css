@@ -15,6 +15,18 @@
     src: url(Montserrat-VariableFont_wght.ttf);
 }
 
+@keyframes slide-in {
+    0% {
+      opacity: 0;
+      transform: translateX(-100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0%);
+    }
+}
+
+
 .link.faded-out {
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
@@ -25,6 +37,7 @@ a {
     font-weight: bolder;
     font-family: 'Montserrat';
     word-break: break-word;
+    animation: slide-in 1s ease-in-out;
 }
 
 html{
@@ -86,6 +99,16 @@ html{
     padding: 20px;
     height: -webkit-fill-available;
     overflow-y: scroll;
+    animation: pixel 1s ease-in-out;
+}
+
+@keyframes pixel {
+    0% {
+        transform: scale(0);
+    }
+    100% {
+        transform: scale(1);
+    }
 }
 
 .side-bar::-webkit-scrollbar {
@@ -100,7 +123,7 @@ html{
 }
 
 .title_gallery {
-    margin-right: 10px;
+    margin-right: 68px;
     font-size: 20px;
     color: black;
 }
@@ -123,6 +146,7 @@ html{
     border-bottom: var(--border);
     padding: 20px 0;
     display: none;
+    animation: slide-in 0.5s ease-in-out forwards;
 }
 
 .side-bar .box.active{
@@ -206,9 +230,24 @@ html{
     border-radius: 20px;
 }
 
+.block{
+    overflow:hidden;
+}
+  
+.trow {
+    display: table-row;
+}
+.alignL, .alignR {
+    display: table-cell;
+    padding-right: 25px;
+}
+.alignR {
+    margin: 1px 1px;
+}
+
 #side-menu {
     position: sticky;
-    top: 10px; left: 10px;
+    top: 0; left: auto;
     z-index: 1200;
     height: fit-content;
     width: fit-content;
@@ -257,6 +296,18 @@ h3.main_title {
     left: 90%;
     top: 4px;
     position: relative;
+}
+
+.fa-regular.fa-star{
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+}
+
+.fa-solid.fa-star{
+    cursor: pointer;
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
 }
 
 .side-bar.active{
