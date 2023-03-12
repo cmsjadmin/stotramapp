@@ -579,33 +579,33 @@ panchang.calculate(t, function() {
         document.getElementById("ayanamsa").innerHTML="Ayanamsa is: " + panchang.Ayanamsa.name;
     }
 
-    // function updateTime(){
-    //     var t = new Date();
-    //     hours = t.getHours();
-    //     minutes = t.getMinutes();
-    //     if (hours == 12) {
-    //         ampm = "PM";
-    //     } else if (hours > 12) {
-    //         hours = hours - 12;
-    //         ampm = "PM";
-    //     } else {
-    //         ampm = "AM";
-    //     }
+    function updateTime(){
+        var t = new Date();
+        hours = t.getHours();
+        minutes = t.getMinutes();
+        if (hours == 12) {
+            ampm = "PM";
+        } else if (hours > 12) {
+            hours = hours - 12;
+            ampm = "PM";
+        } else {
+            ampm = "AM";
+        }
     
-    //     if (hours == 0) {
-    //         hours = 12;
-    //     }
-    // }    
+        if (hours == 0) {
+            hours = 12;
+        }
+    }    
 
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     setInterval(function(){
-    //         updateTime();
-    //     }, 1000);
-    //     intervalId = setInterval(function(){
-    //         document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-    //     }, 1000);
-    //     clearInterval(intervalId);
-    // });
+    document.addEventListener("DOMContentLoaded", function() {
+        setInterval(function(){
+            updateTime();
+        }, 1000);
+        intervalId = setInterval(function(){
+            document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+        }, 1000);
+        clearInterval(intervalId);
+    });
 
     alltime()
 
@@ -631,9 +631,9 @@ panchang.calculate(t, function() {
     });
     document.getElementById("day").addEventListener("click", function() {
         alltime()
-        // intervalId = setInterval(function(){
-        //     document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-        // }, 500);
+        intervalId = setInterval(function(){
+            document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+        }, 500);
     });
     document.getElementById("raasi").addEventListener("click", function() {
         alltime()
