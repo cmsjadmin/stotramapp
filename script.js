@@ -265,7 +265,7 @@ function displayFolders(response, clear=true) {
                         q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                         fields: 'files(id, name, webViewLink)'
                     }).then(function(response){
-                        document.getElementById("arrow-right").scrollIntoView();
+                        scrollToArrow();
                         displayFiles(response);
                         element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
                         console.log("Search Response", response);
@@ -275,34 +275,38 @@ function displayFolders(response, clear=true) {
             }
         });
 
+        
         // let reset = document.querySelector('.reset');
 
         // reset.onclick = () => {
-        //     var startY = sideBar.scrollTop;
-        //     var endY = 0;
-        //     var distance = Math.abs(endY - startY);
-        //     var speed = 1;
-        //     var step = distance / speed;
-        //     var intervalId = setInterval(function() {
-        //     startY = startY + (endY > startY ? step : -step);
-        //     if (startY === endY) {
-        //         clearInterval(intervalId);
-        //     }
-        //     sideBar.scrollTop = startY;
-        //     }, 15);
-        //     langBtn.forEach(remove => remove.classList.remove('active'));
-        //     categoryBtn2.forEach(remove => remove.classList.remove('active'));
+            //     var startY = sideBar.scrollTop;
+            //     var endY = 0;
+            //     var distance = Math.abs(endY - startY);
+            //     var speed = 1;
+            //     var step = distance / speed;
+            //     var intervalId = setInterval(function() {
+                //     startY = startY + (endY > startY ? step : -step);
+                //     if (startY === endY) {
+                    //         clearInterval(intervalId);
+                    //     }
+                    //     sideBar.scrollTop = startY;
+                    //     }, 15);
+                    //     langBtn.forEach(remove => remove.classList.remove('active'));
+                    //     categoryBtn2.forEach(remove => remove.classList.remove('active'));
         //     element.innerHTML = `Search Stotram: `;
         //     dataCata = null;
         //     dataLang = null;
         //     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
         // }
-
+        
     } else {
         folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Categories Found!</div>'
     }
 }
 
+function scrollToArrow() {
+    document.getElementById("arrow-right").scrollIntoView({ behavior: 'smooth' });
+}
 const map1 = new Map([
     ['Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp']
 ]);
@@ -310,9 +314,9 @@ const map1 = new Map([
 let previousSearchValue = "";
 
 // function searchfiles() {
-//     count=0;
-//     document.querySelector('#search-box').oninput = () => {
-//         var searchvalue = document.querySelector('#search-box').value.toString();
+    //     count=0;
+    //     document.querySelector('#search-box').oninput = () => {
+        //         var searchvalue = document.querySelector('#search-box').value.toString();
 //         console.log("searchvalue=%s", searchvalue);
     
 //         document.getElementById("loader").style.display = "block";
@@ -555,7 +559,7 @@ langBtn.forEach(btn =>{
                 q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
                 fields: 'files(id, name, webViewLink)'
             }).then(function(response){
-                document.getElementById("arrow-right").scrollIntoView();
+                scrollToArrow();
                 console.log("DataLang=%s DataCataID=%s", dataLang, dataCataID);
                 clearList();
                 displayFiles(response);
@@ -648,18 +652,10 @@ panchang.calculate(t, function() {
 let reset = document.querySelector('.reset');
 
 reset.onclick = () => {
-    var startY = sideBar.scrollTop;
-    var endY = 0;
-    var distance = Math.abs(endY - startY);
-    var speed = 1;
-    var step = distance / speed;
-    var intervalId = setInterval(function() {
-      startY = startY + (endY > startY ? step : -step);
-      if (startY === endY) {
-        clearInterval(intervalId);
-      }
-      sideBar.scrollTop = startY;
-    }, 15);
+    sideBar.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
     langBtn.forEach(remove => remove.classList.remove('active'));
     categoryBtn2.forEach(remove => remove.classList.remove('active'));
     element.innerHTML = `Search Stotram: `;

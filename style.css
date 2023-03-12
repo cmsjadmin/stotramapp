@@ -42,7 +42,17 @@ a {
 
 html{
     background-color: orange;
+    scroll-behavior: smooth;
 }
+
+.wifi-disconnected {
+    display: none;
+    color: red;
+}  
+.wifi-disconnected.active {
+    display: block;
+    color: red;
+}  
 
 .heading {
     text-align: center;
