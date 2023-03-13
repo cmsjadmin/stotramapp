@@ -682,6 +682,50 @@ document.onkeydown = function (e) {
     }
 };
 
+function toggleAnimations() {
+    const links = document.querySelectorAll('a');
+    const checkbox = document.getElementById('my-checkbox');
+    if (checkbox.checked) {
+      for (var i = 0; i < sideBarbox.length; i++) {
+        sideBarbox[i].style.animation = "none";
+      }
+      if (links.length > 0) {
+        links.forEach(function(link) {
+          link.style.animation = 'none';
+        });
+      } else {
+        const style = document.createElement('style');
+        style.innerHTML = 'a { animation: none; }';
+        document.head.appendChild(style);
+      }
+      sideBar.classList.add("ranimation");
+      localStorage.setItem('animationsDisabled', 'true');
+    } else {
+      sideBar.classList.remove("ranimation");
+      for (var i = 0; i < sideBarbox.length; i++) {
+        sideBarbox[i].style.animation = "slide-in 0.5s ease-in-out forwards";
+      }
+      if (links.length > 0) {
+        links.forEach(function(link) {
+          link.style.animation = 'slide-in 1s ease-in-out';
+        });
+      } else {
+        const style = document.createElement('style');
+        style.innerHTML = 'a { animation: slide-in 1s ease-in-out; }';
+        document.head.appendChild(style);
+      }
+      localStorage.removeItem('animationsDisabled');
+    }
+    console.log("DONE!");
+}
+  
+// Check if animation preference has been saved in localStorage
+const animationsDisabled = localStorage.getItem('animationsDisabled');
+if (animationsDisabled === 'true') {
+    const checkbox = document.getElementById('my-checkbox');
+    checkbox.checked = true;
+    toggleAnimations();
+}  
 
 const htmlElement = document.getElementsByTagName('html')[0];
 const bodyElement = document.body;

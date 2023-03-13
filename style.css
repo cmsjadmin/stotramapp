@@ -112,6 +112,18 @@ html{
     animation: pixel 1s ease-in-out;
 }
 
+.side-bar.ranimation {
+    position: absolute;
+    top: 0; 
+    display: none;
+    width: 20%;
+    background-color: orange;
+    padding: 20px;
+    height: -webkit-fill-available;
+    overflow-y: scroll;
+    animation: none !important;
+}
+
 @keyframes pixel {
     0% {
         transform: scale(0);
@@ -355,7 +367,7 @@ textarea {
     resize: vertical;
     min-height: 60%;
     max-height: 100%;
-}  
+} 
 
 textarea::placeholder {
     color: lightgrey;
