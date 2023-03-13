@@ -686,39 +686,45 @@ function toggleAnimations() {
     const links = document.querySelectorAll('a');
     const checkbox = document.getElementById('my-checkbox');
     if (checkbox.checked) {
-      for (var i = 0; i < sideBarbox.length; i++) {
-        sideBarbox[i].style.animation = "none";
-      }
-      if (links.length > 0) {
-        links.forEach(function(link) {
-          link.style.animation = 'none';
-        });
-      } else {
-        const style = document.createElement('style');
-        style.innerHTML = 'a { animation: none; }';
+        for (var i = 0; i < sideBarbox.length; i++) {
+            sideBarbox[i].style.animation = "none";
+        }
+        if (links.length > 0) {
+            links.forEach(function(link) {
+                link.style.animation = 'none';
+            });
+        } else {
+            const style = document.createElement('style');
+            style.innerHTML = 'a { animation: none; }';
         document.head.appendChild(style);
       }
       sideBar.classList.add("ranimation");
       localStorage.setItem('animationsDisabled', 'true');
     } else {
-      sideBar.classList.remove("ranimation");
-      for (var i = 0; i < sideBarbox.length; i++) {
+        sideBar.classList.remove("ranimation");
+        for (var i = 0; i < sideBarbox.length; i++) {
         sideBarbox[i].style.animation = "slide-in 0.5s ease-in-out forwards";
-      }
-      if (links.length > 0) {
+    }
+    if (links.length > 0) {
         links.forEach(function(link) {
-          link.style.animation = 'slide-in 1s ease-in-out';
+            link.style.animation = 'slide-in 1s ease-in-out';
         });
-      } else {
+    } else {
         const style = document.createElement('style');
         style.innerHTML = 'a { animation: slide-in 1s ease-in-out; }';
         document.head.appendChild(style);
-      }
-      localStorage.removeItem('animationsDisabled');
     }
-    console.log("DONE!");
+    localStorage.removeItem('animationsDisabled');
 }
-  
+langBtn.forEach(remove => remove.classList.remove('active'));
+categoryBtn2.forEach(remove => remove.classList.remove('active'));
+element.innerHTML = `Search Stotram: `;
+dataCata = null;
+dataLang = null;
+listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+console.log("DONE!");
+}
+
 // Check if animation preference has been saved in localStorage
 const animationsDisabled = localStorage.getItem('animationsDisabled');
 if (animationsDisabled === 'true') {
