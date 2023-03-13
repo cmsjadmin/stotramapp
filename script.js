@@ -109,17 +109,18 @@ function displayFiles(response, clear=true) {
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
                 <a href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>           
-            </span>
-            </li>
-            `;
-        } 
-    } else {
-        listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
-        console.log(gdapifiles, gdapifiles.length);
+                </span>
+                </li>
+                `;
+            } 
+        } else {
+            listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
+            console.log(gdapifiles, gdapifiles.length);
+        }
     }
-}
-
+    
 let categoryBtn2;
+
 
 
 function displayFolders(response, clear=true) {
@@ -127,10 +128,10 @@ function displayFolders(response, clear=true) {
     var gdapifolders = response.result.files;
     if(gdapifolders && gdapifolders.length > 0){
         if(clear)
-            folderContainer.innerHTML = '';
+        folderContainer.innerHTML = '';
 
         let promises = [];
-
+        
         for (var i = 0; i < gdapifolders.length; i++) {
             promises.push(gapi.client.drive.files.list({
                 includeItemsFromAllDrives: true,
@@ -144,9 +145,9 @@ function displayFolders(response, clear=true) {
                     return '';
                 }
             }));
-
+            
             folderContainer.innerHTML += `
-                <div data-category="${gdapifolders[i].name}" class="btn">${gdapifolders[i].name}</div>
+            <div data-category="${gdapifolders[i].name}" class="btn">${gdapifolders[i].name}</div>
             `;
             
             map1.set(gdapifolders[i].name, gdapifolders[i].id);
@@ -154,78 +155,10 @@ function displayFolders(response, clear=true) {
 
             Promise.all(promises).then(function(imageTags) {
                 for (var i = 0; i < gdapifolders.length; i++) {
-                  if (imageTags[i] !== '') {
-                    // Check if the image file exists in Github
-                    const imgTag = document.createElement('div');
-                    imgTag.innerHTML = imageTags[i];
-                    const imageFile = imgTag.firstChild.getAttribute('src').split('/').pop();
-                    const owner = 'cmsjadmin';
-                    const repo = 'stotramapp';
-                    const token = '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';
-              
-                    axios({
-                      method: 'get',
-                      url: `https://api.github.com/repos/${owner}/${repo}/contents/${imageFile}`,
-                      headers: {
-                        Authorization: `Bearer ${token}`,
-                        Accept: 'application/vnd.github.v3+json',
-                      },
-                    })
-                      .then((response) => {
-                        // If the file does not exist, upload it to Github
-                        if (response.status === 404) {
-                          // Get the URL of the image file from Google Drive
-                          const fileId = response.result.files[i].id;
-                          const accessToken = gapi.auth.getToken().access_token;
-                          const fileUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
-                          const headers = { Authorization: `Bearer ${accessToken}` };
-              
-                          // Download the image file from the URL
-                          axios.get(fileUrl, {
-                            responseType: 'arraybuffer',
-                            headers: headers,
-                          })
-                            .then((downloadResponse) => {
-                              const fileContent = downloadResponse.data;
-              
-                              // Upload the image file to Github
-                              axios({
-                                method: 'put',
-                                url: `https://api.github.com/repos/${owner}/${repo}/contents/${imageFile}`,
-                                data: {
-                                  message: 'upload image',
-                                  content: fileContent.toString('base64'),
-                                },
-                                headers: {
-                                  Authorization: `Bearer ${token}`,
-                                  Accept: 'application/vnd.github.v3+json',
-                                },
-                              })
-                                .then((response) => {
-                                  console.log(`File ${response.data.content.name} uploaded to Github`);
-                                })
-                                .catch((error) => {
-                                  console.error('Error uploading file to Github', error);
-                                });
-                            })
-                            .catch((error) => {
-                              console.error('Error downloading image file', error);
-                            });
-                        } else {
-                          console.log(`File ${imageFile} already exists in Github`);
-                        }
-                      })
-                      .catch((error) => {
-                        console.error('Error checking file in Github', error);
-                      });
-                    } else {
-                        console.log("HELLO ITS NOT THERE IN GOOGLE DRIVE FOLDER");
-                    }
-              
-                  document.querySelector(`[data-category="${gdapifolders[i].name}"]`).innerHTML = `${imageTags[i]}${gdapifolders[i].name}`;
+                    document.querySelector(`[data-category="${gdapifolders[i].name}"]`).innerHTML = `${imageTags[i]}${gdapifolders[i].name}`;
                 }
             });                                                 
-
+            
         categoryBtn2 = document.querySelectorAll('.category .btn');
 
         categoryBtn2.forEach(btn =>{
@@ -716,13 +649,19 @@ function toggleAnimations() {
     }
     localStorage.removeItem('animationsDisabled');
 }
-langBtn.forEach(remove => remove.classList.remove('active'));
-categoryBtn2.forEach(remove => remove.classList.remove('active'));
-element.innerHTML = `Search Stotram: `;
-dataCata = null;
-dataLang = null;
-listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-console.log("DONE!");
+    if(dataLang) {
+        langBtn.forEach(remove => remove.classList.remove('active'));
+    } 
+    
+    if(dataCata) {
+        categoryBtn2.forEach(remove => remove.classList.remove('active'));
+    }
+
+    element.innerHTML = `Search Stotram: `;
+    dataCata = null;
+    dataLang = null;
+    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+    console.log("DONE!");
 }
 
 // Check if animation preference has been saved in localStorage
