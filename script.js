@@ -13,10 +13,10 @@ const element = document.getElementById("id01");
 const check = document.getElementById("check");
 
 var gdapifiles;
-const CLIENT_ID = '834163430589-vde6a02tetqs1sde9i1pv6ehdq0bu101.apps.googleusercontent.com'
-const CLIENT_SECRET = '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';
-const API_KEY = 'AIzaSyArqfsy-sKUv9XNrT6akLUvpm_U6-pVpMo';
-const SCOPES = 'https://www.googleapis.com/auth/drive';
+const CLIENT_ID = '834163430589-jh3iga52i4timnnr98m9h3haldpd4kc3.apps.googleusercontent.com'
+const CLIENT_SECRET = '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';
+const API_KEY = 'AIzaSyDQWQ3k9RseWsE8aOEl2r5MnocolaTclSY';
+const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets';
 const DRIVE_ID = '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D';
 var signinButton = document.getElementsByClassName('signin')[0];
 var signoutButton = document.getElementsByClassName('signout')[0];
@@ -34,20 +34,59 @@ function initClient(){
         clientId: CLIENT_ID,
         scope: SCOPES,
         driveId: DRIVE_ID,
+        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+        serviceAccountId: 'cmsj-stotram-user@cmsj-project-372902.iam.gserviceaccount.com',
+        keyFile: new Blob([JSON.stringify('772fd3ecb160cb3470c38dfcf8983e716f3b34e7')], { type: "application/json" }),
         plugin_name: "Stotram Test APP"
     }).then(function(){
         loadClient().then(execute);
-    }, function(error){
+    }, function(error) {
         console.error(error);
-    })
+    });
 }
 
+function handleAuthResult(authResult) {
+    if (authResult && !authResult.error) {
+      // Authorization was successful, save access token to localStorage
+      localStorage.setItem('accessToken', authResult.access_token);
+      loadClient();
+    } else {
+      // Authorization failed or has not been granted yet
+      // Try to retrieve access token from localStorage
+      var accessToken = localStorage.getItem('accessToken');
+      if (accessToken) {
+        // Access token is available, use it to authorize the client
+        gapi.auth.setToken({
+          access_token: accessToken
+        });
+        loadClient();
+      } else {
+        // Access token is not available, prompt user for authorization
+        gapi.auth.authorize({
+          client_id: CLIENT_ID,
+          scope: SCOPES,
+          immediate: false
+        }, handleAuthResult);
+      }
+    }
+}  
+
 function loadClient() {
-    gapi.client.setApiKey("AIzaSyArqfsy-sKUv9XNrT6akLUvpm_U6-pVpMo");
+    gapi.client.setApiKey("AIzaSyDQWQ3k9RseWsE8aOEl2r5MnocolaTclSY");
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
         .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
 }
+
+function listSheets() {
+    gapi.client.sheets.spreadsheets.get({
+      spreadsheetId: "1c4Hce_XhrNhdZNsIJ_JPzyhIdFJtVdgclCUKVpeboPs",
+    }).then(function (response) {
+      console.log(response.result);
+    }, function (error) {
+      console.error("Error listing sheets: " + error);
+    });
+}  
 
 var expandContainer = document.querySelector('.expand-container');
 var expandContainerUl = document.querySelector('.expand-container ul');
@@ -406,42 +445,68 @@ var feedbackForm = document.getElementById("feedback-form");
 var closeBtn = document.getElementById("close-btn");
 var feedbackFormContent = document.getElementById("feedback-form-content");
 var feedbackText = document.getElementById("feedback-text");
+var feedbackname = document.getElementById("name-input");
 
 feedbackButton.addEventListener("click", function() {
   feedbackForm.style.display = "block";
+  gapi.auth.authorize({
+    'client_id': CLIENT_ID,
+    'scope': SCOPES,
+    'immediate': true,
+    'response_type': 'token',
+    'include_granted_scopes': true,
+    'authuser': 0
+  });
+  document.getElementById("feedback-form").scrollIntoView({ behavior: 'smooth' });
+  feedbackButton.style.display = "none";
 });
 
 closeBtn.addEventListener("click", function() {
-  feedbackForm.style.display = "none";
+    feedbackForm.style.display = "none";
+    feedbackButton.style.display = "block";
 });
 
 feedbackFormContent.addEventListener("submit", function(event) {
     feedbackFormContent = DOMPurify.sanitize(feedbackFormContent);
     event.preventDefault();
     var feedback = feedbackText.value.trim();
-    if (feedback !== "") { 
-      sendFeedback(feedback);
+    var feedbackn = feedbackname.value.trim();
+    if (feedback !== "" || feedbackn !== "") { 
+      appendData(feedback, feedbackn);
       feedbackText.value = "";
       feedbackForm.style.display = "none";
+      feedbackButton.style.display = "none";
+      var feedbackform = document.querySelector("#feedback");
+      feedbackform.innerHTML += `<div>Thanks for the feedback!</div>`
     } else {
       alert("Please enter your feedback before submitting.");
     }
   });  
 
-function sendFeedback(feedback) {
-  var templateParams = {
-    feedback: feedback,
-    from_name: "CMSJ Stotram App User"
-  };
-  emailjs.send("service_91yx94m", "template_qcxpfof", templateParams)
-    .then(function(response) {
-      console.log("SUCCESS!", response.status, response.text);
-      alert("Thanks for your feedback!");
+function appendData(feedback, feedbackn) {
+    // ID of the spreadsheet you want to append data to
+    var spreadsheetId = '1c4Hce_XhrNhdZNsIJ_JPzyhIdFJtVdgclCUKVpeboPs';
+
+    // Range of cells to append data to, in A1 notation
+    var range = 'Sheet1!A:B';
+
+    // Create the value range object
+    var valueRange = {
+        values: [[feedbackn,feedback]]
+    };
+
+    // Call the Sheets API to append the data to the specified range
+    gapi.client.sheets.spreadsheets.values.append({
+        spreadsheetId: spreadsheetId,
+        range: range,
+        valueInputOption: 'USER_ENTERED',
+        resource: valueRange
+    }).then(function(response) {
+        console.log('Data appended successfully!');
     }, function(error) {
-      console.log("FAILED...", error);
-      alert("There was an error sending your feedback. Please try again later.");
+        console.error('Error appending data:', error.result.error.message);
     });
-}
+}  
 
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
@@ -594,6 +659,8 @@ reset.onclick = () => {
     element.innerHTML = `Search Stotram: `;
     dataCata = null;
     dataLang = null;
+    document.getElementById("search-box").value = "";
+    document.getElementById("search-box").placeholder = "Search Stotram...";
     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
 }
 
@@ -660,6 +727,8 @@ function toggleAnimations() {
     element.innerHTML = `Search Stotram: `;
     dataCata = null;
     dataLang = null;
+    document.getElementById("search-box").value = "";
+    document.getElementById("search-box").placeholder = "Search Stotram...";
     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
     console.log("DONE!");
 }
@@ -671,6 +740,19 @@ if (animationsDisabled === 'true') {
     checkbox.checked = true;
     toggleAnimations();
 }  
+
+if (navigator.connection && navigator.connection.effectiveType !== "4g") {
+    // Check if the device has a slow connection
+    if (navigator.hardwareConcurrency <= 2) {
+      // Check if the device is mid-tier or low-end
+      document.getElementById("loader").style.display = "block";
+      document.getElementById('side-menu').style.display = "none";
+      const gallery = document.getElementsByClassName('gallery');
+      for (let i = 0; i < gallery.length; i++) {
+        gallery[i].style.display = "none";
+    }
+    }
+}
 
 const htmlElement = document.getElementsByTagName('html')[0];
 const bodyElement = document.body;
