@@ -35,8 +35,6 @@ function initClient(){
         scope: SCOPES,
         driveId: DRIVE_ID,
         discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-        serviceAccountId: 'cmsj-stotram-user@cmsj-project-372902.iam.gserviceaccount.com',
-        keyFile: new Blob([JSON.stringify('772fd3ecb160cb3470c38dfcf8983e716f3b34e7')], { type: "application/json" }),
         plugin_name: "Stotram Test APP"
     }).then(function(){
         loadClient().then(execute);
@@ -449,14 +447,6 @@ var feedbackname = document.getElementById("name-input");
 
 feedbackButton.addEventListener("click", function() {
   feedbackForm.style.display = "block";
-  gapi.auth.authorize({
-    'client_id': CLIENT_ID,
-    'scope': SCOPES,
-    'immediate': true,
-    'response_type': 'token',
-    'include_granted_scopes': true,
-    'authuser': 0
-  });
   document.getElementById("feedback-form").scrollIntoView({ behavior: 'smooth' });
   feedbackButton.style.display = "none";
 });
@@ -496,17 +486,22 @@ function appendData(feedback, feedbackn) {
     };
 
     // Call the Sheets API to append the data to the specified range
-    gapi.client.sheets.spreadsheets.values.append({
-        spreadsheetId: spreadsheetId,
-        range: range,
-        valueInputOption: 'USER_ENTERED',
-        resource: valueRange
-    }).then(function(response) {
+    gapi.client.request({
+        path: 'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append',
+        method: 'POST',
+        params: {
+          valueInputOption: 'USER_ENTERED'
+        },
+        headers: {
+          'Authorization': 'Bearer ' + gapi.auth.getToken().access_token
+        },
+        body: valueRange
+      }).then(function(response) {
         console.log('Data appended successfully!');
-    }, function(error) {
+      }, function(error) {
         console.error('Error appending data:', error.result.error.message);
     });
-}  
+}
 
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
