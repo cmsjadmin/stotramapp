@@ -94,9 +94,9 @@
         <button id="feedback-button">Give Feedback</button>
         <div id="feedback-form" style="display:none;">
             <h3 class="title" id="titlefeed" style="color: var(--secondary-color);position: relative;margin: 0.3%;">Feedback Form <button id="close-btn" style="background-color: var(--primary-color);color: var(--secondary-color);position: relative;top: 5%;right: 0%;"><i class="fas fa-times" aria-hidden="true"></i></button></h3>
-            <form id="feedback-form-content">
-                <input type="text" id="name-input" placeholder="Your name..." style="width: -webkit-fill-available;background-color: var(--primary-color);border-color: var(--secondary-color);color: var(--secondary-color);" spellcheck="false">
-                <textarea id="feedback-text" rows="5" placeholder="Enter your feedback here..." style="width: -webkit-fill-available;background-color: var(--primary-color);border-color: var(--secondary-color);color: var(--secondary-color);" spellcheck="false"></textarea>
+            <form action="https://sheetdb.io/api/v1/7f2pcml374ai1" method="post" id="feedback-form-content">
+                <input name="data[Name]" type="text" id="name-input" placeholder="Your name..." style="width: -webkit-fill-available;background-color: var(--primary-color);border-color: var(--secondary-color);color: var(--secondary-color);" spellcheck="false">
+                <textarea name="data[Feedback]" id="feedback-text" rows="5" placeholder="Enter your feedback here..." style="width: -webkit-fill-available;background-color: var(--primary-color);border-color: var(--secondary-color);color: var(--secondary-color);" spellcheck="false"></textarea>
                 <button type="submit" style="background-color: sandybrown;">Submit</button>
             </form>
         </div>        

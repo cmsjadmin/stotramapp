@@ -35,6 +35,8 @@ function initClient(){
         scope: SCOPES,
         driveId: DRIVE_ID,
         discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+        serviceAccountId: 'cmsj-stotram-user@cmsj-project-372902.iam.gserviceaccount.com',
+        keyFile: new Blob([JSON.stringify('772fd3ecb160cb3470c38dfcf8983e716f3b34e7')], { type: "application/json" }),
         plugin_name: "Stotram Test APP"
     }).then(function(){
         loadClient().then(execute);
@@ -462,46 +464,20 @@ feedbackFormContent.addEventListener("submit", function(event) {
     var feedback = feedbackText.value.trim();
     var feedbackn = feedbackname.value.trim();
     if (feedback !== "" || feedbackn !== "") { 
-      appendData(feedback, feedbackn);
-      feedbackText.value = "";
-      feedbackForm.style.display = "none";
-      feedbackButton.style.display = "none";
-      var feedbackform = document.querySelector("#feedback");
-      feedbackform.innerHTML += `<div>Thanks for the feedback!</div>`
+        var form = document.getElementById("feedback-form-content");
+        fetch(form.action, {
+            method: "POST",
+            body: new FormData(document.getElementById("feedback-form-content"))
+        }).then(response => response.json())          
+        feedbackText.value = "";
+        feedbackForm.style.display = "none";
+        feedbackButton.style.display = "none";
+        var feedbackform = document.querySelector("#feedback");
+        feedbackform.innerHTML += `<div>Thanks for the feedback!</div>`
     } else {
-      alert("Please enter your feedback before submitting.");
+        alert("Please enter your feedback before submitting.");
     }
-  });  
-
-function appendData(feedback, feedbackn) {
-    // ID of the spreadsheet you want to append data to
-    var spreadsheetId = '1c4Hce_XhrNhdZNsIJ_JPzyhIdFJtVdgclCUKVpeboPs';
-
-    // Range of cells to append data to, in A1 notation
-    var range = 'Sheet1!A:B';
-
-    // Create the value range object
-    var valueRange = {
-        values: [[feedbackn,feedback]]
-    };
-
-    // Call the Sheets API to append the data to the specified range
-    gapi.client.request({
-        path: 'https://sheets.googleapis.com/v4/spreadsheets/' + spreadsheetId + '/values/' + range + ':append',
-        method: 'POST',
-        params: {
-          valueInputOption: 'USER_ENTERED'
-        },
-        headers: {
-          'Authorization': 'Bearer ' + gapi.auth.getToken().access_token
-        },
-        body: valueRange
-      }).then(function(response) {
-        console.log('Data appended successfully!');
-      }, function(error) {
-        console.error('Error appending data:', error.result.error.message);
-    });
-}
+});    
 
 let categoryBtn = document.querySelectorAll('.category .btn');
 let langBtn = document.querySelectorAll('.lang .btn');
