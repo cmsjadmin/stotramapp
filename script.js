@@ -139,7 +139,6 @@ function execute() {
 function displayFiles(response, clear=true) {
     // Handle the results here (response.result has the parsed body).
     gdapifiles = response.result.files;
-    console.log(gdapifiles && gdapifiles.length);
     if(gdapifiles && gdapifiles.length > 0){
         if(clear)
             listContainer.innerHTML = '';
@@ -147,7 +146,7 @@ function displayFiles(response, clear=true) {
             listContainer.innerHTML += `
             <li data-id="${gdapifiles[i].id}" data-name="${gdapifiles[i].id}">
             <span>
-                <a href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>           
+                <a class="typing-effect" href="${gdapifiles[i].webViewLink}">${gdapifiles[i].name.split(".pdf")[0]}</a>           
                 </span>
                 </li>
                 `;
@@ -156,7 +155,7 @@ function displayFiles(response, clear=true) {
             listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
             console.log(gdapifiles, gdapifiles.length);
         }
-    }
+}
     
 let categoryBtn2;
 
@@ -205,72 +204,12 @@ function displayFolders(response, clear=true) {
                 categoryBtn2.forEach(remove => remove.classList.remove('active'));
                 btn.classList.add('active');
                 dataCata = btn.getAttribute('data-category');
-                var dataCataID = map1.get(dataCata);
-                console.log("Cata Button Click - dataLang dataCata ", dataLang, dataCata);
-                if(dataLang == null) {
-                    console.log("datalang is null");
-                    if(dataCataID != dataCata) {
-                        element.innerHTML = `Search: ${dataCata}`;
-                        listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-                    }
-                    return gapi.client.drive.files.list({
-                        includeItemsFromAllDrives: true, 
-                        supportsAllDrives: true,
-                        q: `mimeType='application/pdf' and "${dataCataID}" in parents`,
-                        fields: 'files(id, name, webViewLink)'
-                    }).then(function(response){
-                        console.log("DataCata=%s DataCataID=%s", dataCata, dataCataID);
-                        displayFiles(response);
-                        element.innerHTML = `Search: ${dataCata}`;
-                        console.log("Search Response", response);
-                    }),
-                    function(err) {console.error("Execute error", err); clearList();};
-                }
-                else {
-                    if(dataCataID != dataCata) {
-                        element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                        listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-                    }
-                    return gapi.client.drive.files.list({
-                        includeItemsFromAllDrives: true, 
-                        supportsAllDrives: true,
-                        q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
-                        fields: 'files(id, name, webViewLink)'
-                    }).then(function(response){
-                        scrollToArrow();
-                        displayFiles(response);
-                        element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                        console.log("Search Response", response);
-                    }),
-                    function(err) {console.error("Execute error", err); clearList();};
+                if(dataLang != null){
+                    scrollToArrow();
                 }
             }
         });
 
-        
-        // let reset = document.querySelector('.reset');
-
-        // reset.onclick = () => {
-            //     var startY = sideBar.scrollTop;
-            //     var endY = 0;
-            //     var distance = Math.abs(endY - startY);
-            //     var speed = 1;
-            //     var step = distance / speed;
-            //     var intervalId = setInterval(function() {
-                //     startY = startY + (endY > startY ? step : -step);
-                //     if (startY === endY) {
-                    //         clearInterval(intervalId);
-                    //     }
-                    //     sideBar.scrollTop = startY;
-                    //     }, 15);
-                    //     langBtn.forEach(remove => remove.classList.remove('active'));
-                    //     categoryBtn2.forEach(remove => remove.classList.remove('active'));
-        //     element.innerHTML = `Search Stotram: `;
-        //     dataCata = null;
-        //     dataLang = null;
-        //     listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-        // }
-        
     } else {
         folderContainer.innerHTML = '<div style="text-align: center;color: black;">No Categories Found!</div>'
     }
@@ -284,46 +223,6 @@ const map1 = new Map([
 ]);
 
 let previousSearchValue = "";
-
-// function searchfiles() {
-    //     count=0;
-    //     document.querySelector('#search-box').oninput = () => {
-        //         var searchvalue = document.querySelector('#search-box').value.toString();
-//         console.log("searchvalue=%s", searchvalue);
-    
-//         document.getElementById("loader").style.display = "block";
-
-//         searchInFolder(searchvalue);
-        
-//         element.innerHTML = `Search: ${searchvalue}`;
-//     }
-// }
-
-// function searchInFolder(searchvalue) {
-//     var promises = []
-//     for (let [folderName, folderId] of map1.entries()) {
-//         promises.push(gapi.client.drive.files.list({
-//             includeItemsFromAllDrives: true,
-//             supportsAllDrives: true,
-//             q: `mimeType='application/pdf' and name contains "${searchvalue}" and "${folderId}" in parents`, 
-//             fields: 'files(id, name, webViewLink)'
-//         }))
-//     }
-//     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-//         if(searchvalue.length == 0 || searchvalue == "") {
-//             clearList();
-//             listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-//             element.innerHTML = `Search Stotram: ${searchvalue}`;
-//             document.getElementById("loader").style.display = "none";
-//         } else {
-//             var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
-//             displayFiles({ result: { files: combinedResults } });
-//             langBtn.forEach(remove => remove.classList.remove('active'));
-//             categoryBtn.forEach(remove => remove.classList.remove('active'));
-//             document.getElementById("loader").style.display = "none";
-//         }
-//     });
-// }
 
 function debounce(fn, delay) {
     let timeoutId;
@@ -411,9 +310,58 @@ menu.onclick = () => {
 
 let resultmain = document.querySelector('.Results');
 
-
 resultmain.onclick = () => {
-    showsideBar();
+    if (dataCata == null && dataLang == null) {
+        sideBar.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+        return;
+    }
+
+    let dataCataID = map1.get(dataCata);
+    let query;
+    
+    if (!dataCataID) {
+        var promises = []
+        for (let [folderName, folderId] of map1.entries()) {
+            promises.push(gapi.client.drive.files.list({
+                includeItemsFromAllDrives: true,
+                supportsAllDrives: true,
+                q: `mimeType='application/pdf' and name contains "${dataLang}" and "${folderId}" in parents`, 
+                fields: 'files(id, name, webViewLink)'
+            }))
+        }
+        Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
+            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            displayFiles({ result: { files: combinedResults } });
+            element.innerHTML = `Search: ${dataLang}`;
+            showsideBar();                    
+        });
+    } else {
+        query = `mimeType='application/pdf' and "${dataCataID}" in parents`;
+        if (dataLang != null) {
+            query += ` and name contains "${dataLang}"`;
+        }
+
+        if (dataCata != null) {
+            let searchLabel = dataLang ? `${dataLang} and ${dataCata}` : `${dataCata}`;
+            element.innerHTML = `Search: ${searchLabel}`;
+        }
+    
+        return gapi.client.drive.files.list({
+            includeItemsFromAllDrives: true,
+            supportsAllDrives: true,
+            q: query,
+            fields: 'files(id, name, webViewLink)'
+        }).then(function (response) {
+            showsideBar();
+            displayFiles(response);
+        }).catch(function (err) {
+            console.error("Execute error", err);
+            clearList();
+        });
+    }
 };
 
 settings.onclick = () => {
@@ -436,9 +384,6 @@ var isWindows = navigator.userAgent.indexOf('Windows') > -1;
 //   // hide the button by setting the display property to "none"
 //   DM.style.display = "none";
 // }
-
-// initialize EmailJS with your user ID
-emailjs.init("GMrN3VFPndRw4lAu-");
 
 var feedbackButton = document.getElementById("feedback-button");
 var feedbackForm = document.getElementById("feedback-form");
@@ -491,132 +436,110 @@ langBtn.forEach(btn =>{
         clearList();
         dataLang = btn.getAttribute('data-lang');
         btn.classList.add('active');
-        var dataCataID = map1.get(dataCata);
-        console.log("Lang Button Click - dataLang=%s", dataLang);
-        if(dataCata == null) {
-            console.log("dataCata is null");
-            map1.forEach(function(value, key) {
-                if(dataCataID != dataCata) {
-                    element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                }
-                return gapi.client.drive.files.list({
-                    includeItemsFromAllDrives: true, 
-                    supportsAllDrives: true,
-                    includeTeamDriveItems: true,
-                    q: `mimeType='application/pdf' and name contains "${dataLang}" and "${value}" in parents`,
-                    fields: 'files(id, name, webViewLink)',
-                }).then(function(response){
-                    if(response.result.files.length > 0) {
-                        displayFiles(response, false);
-                        element.innerHTML = `Search: ${dataLang}`;  
-                        console.log("Search Response", response);
-                    }
-                }),
-                function(err) {console.error("Execute error", err); clearList();};
-            });
-            
-        }
-        else {
-            clearList();
-            if(dataCataID != dataCata) {
-                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-            }
-            return gapi.client.drive.files.list({
-                includeItemsFromAllDrives: true, 
-                supportsAllDrives: true,
-                q: `mimeType='application/pdf' and name contains "${dataLang}" and "${dataCataID}" in parents`,
-                fields: 'files(id, name, webViewLink)'
-            }).then(function(response){
-                scrollToArrow();
-                console.log("DataLang=%s DataCataID=%s", dataLang, dataCataID);
-                clearList();
-                displayFiles(response);
-                element.innerHTML = `Search: ${dataLang} and ${dataCata}`;
-                console.log("Search Response", response);
-            }),
-            function(err) {console.error("Execute error", err); clearList();};
+        if(dataCata != null){
+            scrollToArrow();
         }
     }
 });
 
-var t= new Date();
-panchang.calculate(t, function() {
-    function alltime() {
-        document.getElementById("day").innerHTML="Today: " + panchang.Day.name;
-        document.getElementById("tithi").innerHTML="Tithi: " + panchang.Tithi.name;
-        document.getElementById("nakshtra").innerHTML="Nakshatra: " + panchang.Nakshatra.name;
-        document.getElementById("karna").innerHTML="Karna: " + panchang.Karna.name;
-        document.getElementById("yoga").innerHTML="Yoga: " + panchang.Yoga.name;
-        document.getElementById("raasi").innerHTML="Raasi: " + panchang.Raasi.name;
-        document.getElementById("ayanamsa").innerHTML="Ayanamsa: " + panchang.Ayanamsa.name;
-    }
+// var t= new Date();
+// var xhr = new XMLHttpRequest();
+// xhr.open('GET', 'https://cors-anywhere.herokuapp.com/https://www.drikpanchang.com/dp-api/panchangam/dp-panchangam.php', true);
+// xhr.onload = function() {
+//     if (xhr.status >= 200 && xhr.status < 400) {
+//         var data = JSON.parse(xhr.response);
+//         mPanchangHeaderData = data.panchangam_header_data;
+//         if ((mPanchangHeaderData != null) && (mPanchangHeaderData != undefined)) {
+//             document.getElementById("month").innerHTML="Month: " + mPanchangHeaderData.regional_month;
+//         } else {
+//             document.getElementById("month").innerHTML="Month: Not Found";
+//         }
+//     } else {
+//         document.getElementById("month").innerHTML="Month: Not Found";
+//     }
+// };
+// xhr.send();
+// panchang.calculate(t, function() {
+//     function alltime() {
+//         document.getElementById("day").innerHTML="Today: " + panchang.Day.name;
+//         document.getElementById("tithi").innerHTML="Tithi: " + panchang.Tithi.name;
+//         document.getElementById("nakshtra").innerHTML="Nakshatra: " + panchang.Nakshatra.name;
+//         document.getElementById("karna").innerHTML="Karna: " + panchang.Karna.name;
+//         document.getElementById("yoga").innerHTML="Yoga: " + panchang.Yoga.name;
+//         document.getElementById("raasi").innerHTML="Raasi: " + panchang.Raasi.name;
+//         document.getElementById("ayanamsa").innerHTML="Ayanamsa: " + panchang.Ayanamsa.name;
+//     }
 
-    // function updateTime(){
-    //     var t = new Date();
-    //     hours = t.getHours();
-    //     minutes = t.getMinutes();
-    //     if (hours == 12) {
-    //         ampm = "PM";
-    //     } else if (hours > 12) {
-    //         hours = hours - 12;
-    //         ampm = "PM";
-    //     } else {
-    //         ampm = "AM";
-    //     }
+
+//     // function updateTime(){
+//     //     var t = new Date();
+//     //     hours = t.getHours();
+//     //     minutes = t.getMinutes();
+//     //     if (hours == 12) {
+//     //         ampm = "PM";
+//     //     } else if (hours > 12) {
+//     //         hours = hours - 12;
+//     //         ampm = "PM";
+//     //     } else {
+//     //         ampm = "AM";
+//     //     }
     
-    //     if (hours == 0) {
-    //         hours = 12;
-    //     }
-    // }    
+//     //     if (hours == 0) {
+//     //         hours = 12;
+//     //     }
+//     // }    
 
-    // document.addEventListener("DOMContentLoaded", function() {
-    //     setInterval(function(){
-    //         updateTime();
-    //     }, 1000);
-    //     intervalId = setInterval(function(){
-    //         document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-    //     }, 1000);
-    //     clearInterval(intervalId);
-    // });
+//     // document.addEventListener("DOMContentLoaded", function() {
+//     //     setInterval(function(){
+//     //         updateTime();
+//     //     }, 1000);
+//     //     intervalId = setInterval(function(){
+//     //         document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+//     //     }, 1000);
+//     //     clearInterval(intervalId);
+//     // });
 
-    alltime()
+//     alltime()
 
-    document.getElementById("tithi").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-        document.getElementById("tithi").innerHTML = "Tithi start: " + panchang.Tithi.start + "<br><br>Tithi end: " + panchang.Tithi.end;
-    });
-    document.getElementById("nakshtra").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-        document.getElementById("nakshtra").innerHTML = "Nakshtra start: " + panchang.Nakshatra.start + "<br><br>Nakshtra end: " + panchang.Nakshatra.end;
-    });
-    document.getElementById("karna").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-        document.getElementById("karna").innerHTML = "Karna start: " + panchang.Karna.start + "<br><br>Karna end: " + panchang.Karna.end;
-    });
-    document.getElementById("yoga").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-        document.getElementById("yoga").innerHTML = "Yoga start: " + panchang.Yoga.start + "<br><br>Yoga end: " + panchang.Yoga.end;
-    });
-    document.getElementById("day").addEventListener("click", function() {
-        alltime()
-        // intervalId = setInterval(function(){
-        //     document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-        // }, 500);
-    });
-    document.getElementById("raasi").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-    });
-    document.getElementById("ayanamsa").addEventListener("click", function() {
-        alltime()
-        // clearInterval(intervalId);
-    });
-});
+//     document.getElementById("tithi").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//         document.getElementById("tithi").innerHTML = "Tithi start: " + panchang.Tithi.start + "<br><br>Tithi end: " + panchang.Tithi.end;
+//     });
+//     document.getElementById("nakshtra").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//         document.getElementById("nakshtra").innerHTML = "Nakshtra start: " + panchang.Nakshatra.start + "<br><br>Nakshtra end: " + panchang.Nakshatra.end;
+//     });
+//     document.getElementById("karna").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//         document.getElementById("karna").innerHTML = "Karna start: " + panchang.Karna.start + "<br><br>Karna end: " + panchang.Karna.end;
+//     });
+//     document.getElementById("yoga").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//         document.getElementById("yoga").innerHTML = "Yoga start: " + panchang.Yoga.start + "<br><br>Yoga end: " + panchang.Yoga.end;
+//     });
+//     document.getElementById("day").addEventListener("click", function() {
+//         alltime()
+//         // intervalId = setInterval(function(){
+//         //     document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
+//         // }, 500);
+//     });
+//     document.getElementById("raasi").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//     });
+//     document.getElementById("ayanamsa").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//     });
+//     document.getElementById("month").addEventListener("click", function() {
+//         alltime()
+//         // clearInterval(intervalId);
+//     });
+// });
 
 let reset = document.querySelector('.reset');
 
@@ -653,102 +576,6 @@ document.onkeydown = function (e) {
     }
 };
 
-function toggleAnimations() {
-    const links = document.querySelectorAll('a');
-    const checkbox = document.getElementById('my-checkbox');
-    if (checkbox.checked) {
-        for (var i = 0; i < sideBarbox.length; i++) {
-            sideBarbox[i].style.animation = "none";
-        }
-        if (links.length > 0) {
-            links.forEach(function(link) {
-                link.style.animation = 'none';
-            });
-        } else {
-            const style = document.createElement('style');
-            style.innerHTML = 'a { animation: none; }';
-        document.head.appendChild(style);
-      }
-      sideBar.classList.add("ranimation");
-      localStorage.setItem('animationsDisabled', 'true');
-    } else {
-        sideBar.classList.remove("ranimation");
-        for (var i = 0; i < sideBarbox.length; i++) {
-        sideBarbox[i].style.animation = "slide-in 0.5s ease-in-out forwards";
-    }
-    if (links.length > 0) {
-        links.forEach(function(link) {
-            link.style.animation = 'slide-in 1s ease-in-out';
-        });
-    } else {
-        const style = document.createElement('style');
-        style.innerHTML = 'a { animation: slide-in 1s ease-in-out; }';
-        document.head.appendChild(style);
-    }
-    localStorage.removeItem('animationsDisabled');
-}
-    if(dataLang) {
-        langBtn.forEach(remove => remove.classList.remove('active'));
-    } 
-    
-    if(dataCata) {
-        categoryBtn2.forEach(remove => remove.classList.remove('active'));
-    }
-
-    element.innerHTML = `Search Stotram: `;
-    dataCata = null;
-    dataLang = null;
-    document.getElementById("search-box").value = "";
-    document.getElementById("search-box").placeholder = "Search Stotram...";
-    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
-    console.log("DONE!");
-}
-
-// Check if animation preference has been saved in localStorage
-const animationsDisabled = localStorage.getItem('animationsDisabled');
-if (animationsDisabled === 'true') {
-    const checkbox = document.getElementById('my-checkbox');
-    checkbox.checked = true;
-    toggleAnimations();
-}  
-
-if (navigator.connection && navigator.connection.effectiveType !== "4g") {
-    // Check if the device has a slow connection
-    if (navigator.hardwareConcurrency <= 2) {
-      // Check if the device is mid-tier or low-end
-      document.getElementById("loader").style.display = "block";
-      document.getElementById('side-menu').style.display = "none";
-      const gallery = document.getElementsByClassName('gallery');
-      for (let i = 0; i < gallery.length; i++) {
-        gallery[i].style.display = "none";
-    }
-    }
-}
-
-const htmlElement = document.getElementsByTagName('html')[0];
-const bodyElement = document.body;
-
-// Function to disable all stylesheets
-function disableStylesheets() {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("rel").endsWith("stylesheet")) {
-      link.disabled = true;
-    }
-  }
-}
-
-// Function to enable a specific stylesheet
-function enableStylesheet(stylesheet) {
-  var i, link;
-  for (i = 0; (link = document.getElementsByTagName("link")[i]); i++) {
-    if (link.getAttribute("href").endsWith(stylesheet)) {
-      link.disabled = false;
-    }
-  }
-}
-
-
 let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
 
 let activeDMButton = localStorage.getItem('data-DM');
@@ -757,16 +584,17 @@ if (activeDMButton == null) {
   localStorage.setItem('data-DM', activeDMButton);
 }
 
-
 // Set the active button and corresponding CSS file
 darkMODEButton.forEach(btn => {
     if (btn.getAttribute('data-DM') == activeDMButton) {
       btn.classList.add("active");
       if (activeDMButton == "Dark") {
         root.style.setProperty('--primary-color', 'black');
+        root.style.setProperty('--area-placeholder', 'white');
         root.style.setProperty('--secondary-color', 'white');
       } else {
         root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--area-placeholder', 'black');
         root.style.setProperty('--secondary-color', 'black');
       }
     } else {
@@ -782,36 +610,22 @@ darkMODEButton.forEach(btn => {
     dataDM = btn.getAttribute('data-DM');
     if (dataDM == "Dark") {
         root.style.setProperty('--primary-color', 'black');
+        root.style.setProperty('--area-placeholder', 'white');
         root.style.setProperty('--secondary-color', 'white');
         localStorage.setItem("data-DM", "Dark");
     } else if (dataDM == "Light") {
         root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--area-placeholder', 'black');
         root.style.setProperty('--secondary-color', 'black');
         localStorage.setItem("data-DM", "Light");
     } else {
         root.style.setProperty('--primary-color', 'white');
+        root.style.setProperty('--area-placeholder', 'black');
         root.style.setProperty('--secondary-color', 'black');
         localStorage.setItem("data-DM", "Light");
     }
   }
 });
-
-
-// function setCookie(name, value, expires, path, domain, secure) {
-//     var cookie = name + "=" + escape(value) +
-//       ((expires) ? "; expires=" + expires : "") +
-//       ((path) ? "; path=" + path : "") +
-//       ((domain) ? "; domain=" + domain : "") +
-//       ((secure) ? "; secure" : "");
-//     document.cookie = cookie;
-// }
-  
-// function getCookie(name) {
-//     var value = "; " + document.cookie;
-//     var parts = value.split("; " + name + "=");
-//     if (parts.length == 2) return parts.pop().split(";").shift();
-//     return null;
-// }
 
 window.addEventListener("DOMContentLoaded", function(){
     document.getElementById('side-menu').style.display = "none";
@@ -820,23 +634,3 @@ window.addEventListener("DOMContentLoaded", function(){
         gallery[i].style.display = "none";
     }
 });
-
-// if (getCookie("darkMode") === null) {
-//     setCookie("darkMode", "false", 9999);
-// }
-
-// function changeStatus() {
-//     var darkMode = getCookie("darkMode");
-//     if (darkMode === "true") {
-//         setCookie("darkMode", "false", 9999);
-//         window.location.reload(true);
-
-//         root.style.setProperty('--primary-color', 'white');
-//         root.style.setProperty('--secondary-color', 'black');
-//     } else {
-//         setCookie("darkMode", "true", 9999);
-//         window.location.reload(true);
-//         root.style.setProperty('--primary-color', 'black');
-//         root.style.setProperty('--secondary-color', 'white');
-//     }
-// }

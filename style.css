@@ -5,6 +5,7 @@
     --secondary-color: black;
     --primary-color: white;
     --cadetblue: cadetblue;
+    --area-placeholder: white;
     --box-shadow:0 5px 10px rgba(0,0,0,.1);
     --black:#333;
     --dark-bg:rgba(0,0,0,.7);
@@ -44,15 +45,6 @@ html{
     background-color: orange;
     scroll-behavior: smooth;
 }
-
-.wifi-disconnected {
-    display: none;
-    color: red;
-}  
-.wifi-disconnected.active {
-    display: block;
-    color: red;
-}  
 
 .heading {
     text-align: center;
@@ -379,7 +371,7 @@ textarea:focus {
 
 input::placeholder,
 textarea::placeholder {
-    color: darkcyan;
+    color: var(--area-placeholder);
 }
 
 .gallery .box.active{
