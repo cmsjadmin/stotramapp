@@ -180,6 +180,9 @@ html{
         justify-content: center;
         text-align: center;
     }
+    .side-bar {
+        height: -webkit-fill-available;
+    }
 }
 
 /* media query for iPhones and iPads in landscape orientation */
@@ -187,6 +190,9 @@ html{
     .side-bar .box {
         justify-content: center;
         text-align: center;
+    }
+    .side-bar {
+        height: -webkit-fill-available;
     }
 }
 
