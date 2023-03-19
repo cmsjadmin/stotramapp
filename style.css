@@ -173,6 +173,25 @@ html{
     display: block;
 }
 
+
+/* media query for iPhones and iPads in portrait orientation */
+@media only screen and (max-device-width: 768px) and (orientation: portrait) {
+    .side-bar .box {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+}
+
+/* media query for iPhones and iPads in landscape orientation */
+@media only screen and (max-device-width: 768px) and (orientation: landscape) {
+    .side-bar .box {
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+}
+
 .gallery .box #search-box {
     padding: 12px;
     border-radius: 60px;
