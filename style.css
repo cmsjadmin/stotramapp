@@ -176,7 +176,7 @@ html{
 
 /* media query for iPhones and iPads in portrait orientation */
 @media only screen and (max-device-width: 768px) and (orientation: portrait) {
-    .side-bar .box {
+    .side-bar .box .btn {
         flex-direction: column;
         justify-content: center;
         text-align: center;
@@ -188,7 +188,7 @@ html{
 
 /* media query for iPhones and iPads in landscape orientation */
 @media only screen and (max-device-width: 768px) and (orientation: landscape) {
-    .side-bar .box {
+    .side-bar .box .btn {
         flex-direction: column;
         justify-content: center;
         text-align: center;
