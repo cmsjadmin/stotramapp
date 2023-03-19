@@ -161,6 +161,9 @@ html{
     padding: 20px 0;
     display: none;
     animation: slide-in 0.5s ease-in-out forwards;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .side-bar .box.active{
