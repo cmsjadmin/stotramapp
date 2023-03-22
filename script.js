@@ -42,6 +42,8 @@ function initClient(){
         loadClient().then(execute);
     }, function(error) {
         console.error(error);
+        var errorMessage = document.getElementById('message');
+        errorMessage.style.display = 'block';
     });
 }
 
