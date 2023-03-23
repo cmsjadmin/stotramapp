@@ -42,8 +42,6 @@ function initClient(){
         loadClient().then(execute);
     }, function(error) {
         console.error(error);
-        var errorMessage = document.getElementById('message');
-        errorMessage.style.display = 'block';
     });
 }
 
@@ -138,6 +136,24 @@ function execute() {
     function(err) { console.error("Execute error", err); });
 }
 
+const TIME_LIMIT = 10000; // 10 seconds
+const loader = document.getElementById("loader");
+const errorMessage = document.getElementById('message');
+
+const timer = setTimeout(function() {
+    // Check if the user is online
+    if (navigator.onLine) {
+        console.log("Hello!");
+    } else {
+        // Display a message indicating that the user needs to be online
+        errorMessage.style.display = 'block';
+    }
+}, TIME_LIMIT);
+
+loader.addEventListener("load", function() {
+    clearTimeout(timer);
+});
+
 function displayFiles(response, clear=true) {
     // Handle the results here (response.result has the parsed body).
     gdapifiles = response.result.files;
@@ -158,6 +174,8 @@ function displayFiles(response, clear=true) {
             console.log(gdapifiles, gdapifiles.length);
         }
 }
+
+
     
 let categoryBtn2;
 
