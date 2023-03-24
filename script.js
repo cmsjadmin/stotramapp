@@ -45,32 +45,6 @@ function initClient(){
     });
 }
 
-function handleAuthResult(authResult) {
-    if (authResult && !authResult.error) {
-      // Authorization was successful, save access token to localStorage
-      localStorage.setItem('accessToken', authResult.access_token);
-      loadClient();
-    } else {
-      // Authorization failed or has not been granted yet
-      // Try to retrieve access token from localStorage
-      var accessToken = localStorage.getItem('accessToken');
-      if (accessToken) {
-        // Access token is available, use it to authorize the client
-        gapi.auth.setToken({
-          access_token: accessToken
-        });
-        loadClient();
-      } else {
-        // Access token is not available, prompt user for authorization
-        gapi.auth.authorize({
-          client_id: CLIENT_ID,
-          scope: SCOPES,
-          immediate: false
-        }, handleAuthResult);
-      }
-    }
-}  
-
 function loadClient() {
     gapi.client.setApiKey("AIzaSyDQWQ3k9RseWsE8aOEl2r5MnocolaTclSY");
     return gapi.client.load("https://content.googleapis.com/discovery/v1/apis/drive/v3/rest")
@@ -124,6 +98,7 @@ function execute() {
         result = response;
         displayFiles(result); 
         const gallery = document.getElementsByClassName('gallery');
+        errorMessage.style.display = 'none';
         document.getElementById("loader").style.display = "none";
         document.getElementById('side-menu').style.display = "block";
         searchfolder();
@@ -136,7 +111,7 @@ function execute() {
     function(err) { console.error("Execute error", err); });
 }
 
-const TIME_LIMIT = 10000; // 10 seconds
+const TIME_LIMIT = 5000; // 10 seconds
 const loader = document.getElementById("loader");
 const errorMessage = document.getElementById('message');
 
@@ -144,9 +119,37 @@ const timer = setTimeout(function() {
     // Check if the user is online
     if (navigator.onLine) {
         console.log("Hello!");
+
+        // Check the type of connection
+        const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+        const type = connection.effectiveType;
+
+        console.log(`Connection type: ${type}`);
+
+        // Check the downlink speed
+        const downlink = connection.downlink;
+
+        if (downlink >= 10) {
+            console.log("5G or faster");
+        } else if (downlink >= 1.5) {
+            console.log("4G");
+        } else if (downlink >= 0.384) {
+            console.log("3G");
+            errorMessage.innerHTML = "Your connection is slow, so some actions may take longer than usual. Please try to connect to a faster network if possible, or wait for it to load complete.";
+        } else {
+            console.log("Less than 3G");
+            errorMessage.innerHTML = "Your connection is really slow, so some actions may take longer than usual. Please try to connect to a faster network if possible, or wait for it to load complete.";
+            errorMessage.style.display = 'block';
+        }
     } else {
         // Display a message indicating that the user needs to be online
-        errorMessage.style.display = 'block';
+        if(isIOS){
+            loader.style.display = 'none';
+        } else {
+            loader.style.display = 'none';
+            errorMessage.style.top = 'calc(50%)';
+            errorMessage.style.display = 'block';
+        }
     }
 }, TIME_LIMIT);
 
