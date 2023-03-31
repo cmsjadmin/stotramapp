@@ -16,7 +16,7 @@ var gdapifiles;
 const CLIENT_ID = '834163430589-jh3iga52i4timnnr98m9h3haldpd4kc3.apps.googleusercontent.com'
 const CLIENT_SECRET = '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';
 const API_KEY = 'AIzaSyDQWQ3k9RseWsE8aOEl2r5MnocolaTclSY';
-const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/spreadsheets';
+const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar.readonly';
 const DRIVE_ID = '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D';
 var signinButton = document.getElementsByClassName('signin')[0];
 var signoutButton = document.getElementsByClassName('signout')[0];
@@ -34,9 +34,7 @@ function initClient(){
         clientId: CLIENT_ID,
         scope: SCOPES,
         driveId: DRIVE_ID,
-        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
-        serviceAccountId: 'cmsj-stotram-user@cmsj-project-372902.iam.gserviceaccount.com',
-        keyFile: new Blob([JSON.stringify('772fd3ecb160cb3470c38dfcf8983e716f3b34e7')], { type: "application/json" }),
+        discoveryDocs: ['https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest'],
         plugin_name: "Stotram Test APP"
     }).then(function(){
         loadClient().then(execute);
@@ -51,16 +49,6 @@ function loadClient() {
         .then(function() { console.log("GAPI client loaded for API"); },
             function(err) { console.error("Error loading GAPI client for API", err); });
 }
-
-function listSheets() {
-    gapi.client.sheets.spreadsheets.get({
-      spreadsheetId: "1c4Hce_XhrNhdZNsIJ_JPzyhIdFJtVdgclCUKVpeboPs",
-    }).then(function (response) {
-      console.log(response.result);
-    }, function (error) {
-      console.error("Error listing sheets: " + error);
-    });
-}  
 
 var expandContainer = document.querySelector('.expand-container');
 var expandContainerUl = document.querySelector('.expand-container ul');
@@ -182,8 +170,6 @@ function displayFiles(response, clear=true) {
     
 let categoryBtn2;
 
-
-
 function displayFolders(response, clear=true) {
     // Handle the results here (response.result has the parsed body).
     var gdapifolders = response.result.files;
@@ -258,6 +244,51 @@ function debounce(fn, delay) {
         }, delay);
     }
 }
+
+const calendarId = "19e70d47ebd9369eba23e2b8ddbf14fccbe7265917e770bf15e4d389f496c888@group.calendar.google.com";
+const now = new Date().toISOString();
+const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
+
+const calendarDiv = document.querySelector('.calendar');
+function fetchcalendar() {
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        const now = new Date().toISOString();
+        const events = data.items.filter(event => {
+          const endDate = new Date(event.end.dateTime || event.end.date);
+          return endDate >= new Date(now);
+        }).slice(0, 5);
+  
+        var html = '<table>';
+        html += '<tr><th>Event</th><th>Date</th><th>Time</th><th>Description</th></tr>';
+  
+        if (events.length > 0) {
+          for (var i = 0; i < events.length; i++) {
+            var event = events[i];
+            const startDate = new Date(event.start.dateTime || event.start.date);
+            const endDate = new Date(event.end.dateTime || event.end.date);
+            const eventDate = startDate.toLocaleDateString();
+            const eventTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' - ' + endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            const eventDescription = event.description ? (event.description.startsWith('http') ? `<a class="type" href="${event.description}">Link</a>` : event.description) : '';
+  
+            if (endDate >= new Date(now)) {
+              html += '<tr>';
+              html += '<td>' + event.summary + '</td>';
+              html += '<td>' + eventDate + '</td>';
+              html += '<td>' + eventTime + '</td>';
+              html += '<td>' + eventDescription + '</td>';
+              html += '</tr>';
+            }
+          }
+          html += '</table>';
+          calendarDiv.innerHTML = html;
+        } else {
+          calendarDiv.innerHTML = 'No Events Found';
+        }
+      })
+      .catch(error => console.error(error));
+}  
 
 function searchfiles() {
     count=0;
@@ -387,12 +418,27 @@ resultmain.onclick = () => {
     }
 };
 
+let isLoading = false;
+
+let calendarmainDiv = document.querySelectorAll('.calendar');
+
 settings.onclick = () => {
-    settings.classList.add("loading");
-    setTimeout(() => {
-        settings.classList.remove("loading");
-        sideBarbox.forEach(toggle => toggle.classList.toggle('active'));
-    }, 500);
+    if (!isLoading) {
+        isLoading = true;
+        settings.classList.add("loading");
+        setTimeout(() => {
+            settings.classList.remove("loading");
+            sideBarbox.forEach(toggle => toggle.classList.toggle('active'));
+            calendarmainDiv.forEach(div => {
+                div.classList.toggle('active');
+                if (div.classList.contains("active")) {
+                    // fetchcalendar();
+                    console.log('Fetch Calendar Events');
+                }
+            });
+            isLoading = false;
+        }, 500);
+    }
 };
 
 // detect if the user is on an iOS device
@@ -431,7 +477,7 @@ feedbackFormContent.addEventListener("submit", function(event) {
     event.preventDefault();
     var feedback = feedbackText.value.trim();
     var feedbackn = feedbackname.value.trim();
-    if (feedback !== "" || feedbackn !== "") { 
+    if (feedback !== "" && feedbackn !== "") { 
         var form = document.getElementById("feedback-form-content");
         fetch(form.action, {
             method: "POST",
