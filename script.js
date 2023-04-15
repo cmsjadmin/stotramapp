@@ -6,11 +6,8 @@ let sideBarbox = document.querySelectorAll('.side-bar .box');
 let sideBarbox22 = document.querySelector('.side-bar #signinfirst_box22');
 let storam_container = document.querySelector('.gallery .storam-container');
 let settings = document.querySelector('#settings');
-let signinout = document.querySelector('#auth-button');
-let bottombtn = document.querySelector('#bottombtn');
 window.onload = handleClientLoad;
 const element = document.getElementById("id01");
-const check = document.getElementById("check");
 
 var gdapifiles;
 const CLIENT_ID = '834163430589-jh3iga52i4timnnr98m9h3haldpd4kc3.apps.googleusercontent.com'
@@ -18,11 +15,6 @@ const CLIENT_SECRET = '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';
 const API_KEY = 'AIzaSyDQWQ3k9RseWsE8aOEl2r5MnocolaTclSY';
 const SCOPES = 'https://www.googleapis.com/auth/drive https://www.googleapis.com/auth/calendar.readonly';
 const DRIVE_ID = '1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D';
-var signinButton = document.getElementsByClassName('signin')[0];
-var signoutButton = document.getElementsByClassName('signout')[0];
-let tokenClient;
-let gapiInited = false;
-let gisInited = false;
 
 function handleClientLoad() {
     gapi.load('client:auth2', initClient);
@@ -50,8 +42,6 @@ function loadClient() {
             function(err) { console.error("Error loading GAPI client for API", err); });
 }
 
-var expandContainer = document.querySelector('.expand-container');
-var expandContainerUl = document.querySelector('.expand-container ul');
 var listContainer = document.querySelector('.storam-container ul');
 var folderContainer = document.querySelector('.category');
 
@@ -67,7 +57,6 @@ function searchfolder() {
         q: `'1SQ8ekSOyQkJQPNchWY5efs3gZuCsou8D' in parents and mimeType='application/vnd.google-apps.folder'`,
         fields: 'files(id, name)'
     }).then(function(response){
-        console.log("RESPONSE", response);
         displayFolders(response);
     }), 
     function(err) { console.error("Execute error", err); };
@@ -91,10 +80,10 @@ function execute() {
         document.getElementById('side-menu').style.display = "block";
         searchfolder();
         showsideBar();
+        fetchcalendar();
         for (let i = 0; i < gallery.length; i++) {
             gallery[i].style.display = "block";
         }
-        console.log("Response", response);
     },
     function(err) { console.error("Execute error", err); });
 }
@@ -106,26 +95,23 @@ const errorMessage = document.getElementById('message');
 const timer = setTimeout(function() {
     // Check if the user is online
     if (navigator.onLine) {
-        console.log("Hello!");
 
         // Check the type of connection
         const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-        const type = connection.effectiveType;
-
-        console.log(`Connection type: ${type}`);
 
         // Check the downlink speed
         const downlink = connection.downlink;
 
         if (downlink >= 10) {
-            console.log("5G or faster");
+            // 5G or faster
         } else if (downlink >= 1.5) {
-            console.log("4G");
+            // 4G
         } else if (downlink >= 0.384) {
-            console.log("3G");
+            // 3G
             errorMessage.innerHTML = "Your connection is slow, so some actions may take longer than usual. Please try to connect to a faster network if possible, or wait for it to load complete.";
+            errorMessage.style.display = 'block';
         } else {
-            console.log("Less than 3G");
+            // Less than 3G
             errorMessage.innerHTML = "Your connection is really slow, so some actions may take longer than usual. Please try to connect to a faster network if possible, or wait for it to load complete.";
             errorMessage.style.display = 'block';
         }
@@ -162,12 +148,9 @@ function displayFiles(response, clear=true) {
             } 
         } else {
             listContainer.innerHTML = '<div style="text-align: center;color: black;">No Files</div>'
-            console.log(gdapifiles, gdapifiles.length);
         }
 }
 
-
-    
 let categoryBtn2;
 
 function displayFolders(response, clear=true) {
@@ -228,7 +211,7 @@ function scrollToArrow() {
     document.getElementById("arrow-right").scrollIntoView({ behavior: 'smooth' });
 }
 const map1 = new Map([
-    ['Bhagavad Geeta', '1zxN8U4BkDdcWkG65FS5IvIuzJ_TsEGcp']
+    
 ]);
 
 let previousSearchValue = "";
@@ -245,7 +228,7 @@ function debounce(fn, delay) {
     }
 }
 
-const calendarId = "19e70d47ebd9369eba23e2b8ddbf14fccbe7265917e770bf15e4d389f496c888@group.calendar.google.com";
+const calendarId = "c_59757dbd97e5be8d8516c4045538f251ad86d2110fa1d55aa721726c9d9af035@group.calendar.google.com";
 const now = new Date().toISOString();
 const url = `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?key=${API_KEY}`;
 
@@ -256,9 +239,13 @@ function fetchcalendar() {
       .then(data => {
         const now = new Date().toISOString();
         const events = data.items.filter(event => {
-          const endDate = new Date(event.end.dateTime || event.end.date);
-          return endDate >= new Date(now);
-        }).slice(0, 5);
+            const endDate = new Date(event.end.dateTime || event.end.date);
+            return endDate >= new Date(now);
+        }).sort((a, b) => {
+            const aStartDate = new Date(a.start.dateTime || a.start.date);
+            const bStartDate = new Date(b.start.dateTime || b.start.date);
+            return aStartDate - bStartDate;
+        }).slice(0, 5);          
   
         var html = '<table>';
         html += '<tr><th>Event</th><th>Date</th><th>Time</th><th>Description</th></tr>';
@@ -270,8 +257,32 @@ function fetchcalendar() {
             const endDate = new Date(event.end.dateTime || event.end.date);
             const eventDate = startDate.toLocaleDateString();
             const eventTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' - ' + endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            const eventDescription = event.description ? (event.description.startsWith('http') ? `<a class="type" href="${event.description}">Link</a>` : event.description) : '';
-  
+            var eventDescription = event.description;
+            if (eventDescription != null){
+                if (eventDescription.includes('RSVP')) {
+                    if (eventDescription.includes('href')){
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(eventDescription, 'text/html');
+                        const url = doc.querySelector('a').getAttribute('href');
+                        eventDescription = event.description ? (event.description.includes('http') ? `<a class="type" href="${url}">RSVP</a>` : event.description) : '';
+                    } else {
+                        eventDescription = event.description ? (event.description.includes('http') ? `<a class="type" href="${event.description.substring(5)}">RSVP</a>` : event.description) : '';
+                    }
+                } else {
+                    // Replace "RSVP" with "Link" in eventDescription
+                    if (eventDescription.includes("href")){
+                        const parser = new DOMParser();
+                        const doc = parser.parseFromString(eventDescription, 'text/html');
+                        const url = doc.querySelector('a').getAttribute('href');
+                        eventDescription = event.description ? (event.description.includes('http') ? `<a class="type" href="${url}">LINK</a>` : event.description) : '';
+                    } else {
+                        eventDescription = event.description ? (event.description.includes('http') ? `<a class="type" href="${event.description}">LINK</a>` : event.description) : '';
+                    }
+                }
+            } else {
+                eventDescription = 'No RSVP or Link provided';
+            }
+              
             if (endDate >= new Date(now)) {
               html += '<tr>';
               html += '<td>' + event.summary + '</td>';
@@ -293,11 +304,11 @@ function fetchcalendar() {
 function searchfiles() {
     count=0;
     document.querySelector('#search-box').oninput = debounce(() => {
-        var searchvalue = document.querySelector('#search-box').value.toString();
-        console.log("searchvalue=%s", searchvalue);
+        var searchvalue = document.querySelector('#search-box').value.toString().trim();
         dataCata = null;
         dataLang = null;
-
+        previousButton.style.display = "none";
+        nextButton.style.display = "none";
         searchvalue = DOMPurify.sanitize(searchvalue);
     
         document.getElementById("loader").style.display = "block";
@@ -309,7 +320,7 @@ function searchfiles() {
 }
 
 function searchInFolder(searchvalue) {
-    if (!/^[a-z0-9\-]+$/i.test(searchvalue)) {
+    if (!/^[a-z0-9\- ]+$/i.test(searchvalue)) {
         clearList();
         listContainer.innerHTML = '<div style="text-align: center;">Search with only alphanumeric characters</div>'
         element.innerHTML = `Search Stotram: `;
@@ -335,15 +346,14 @@ function searchInFolder(searchvalue) {
             document.getElementById("loader").style.display = "none";
             langBtn.forEach(remove => remove.classList.remove('active'));
             categoryBtn2.forEach(remove => remove.classList.remove('active'));
-        } else if (!/^[a-z0-9\-]+$/i.test(searchvalue)) {
-            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
-            displayFiles({ result: { files: combinedResults } });
-            langBtn.forEach(remove => remove.classList.remove('active'));
-            categoryBtn2.forEach(remove => remove.classList.remove('active'));
-            document.getElementById("loader").style.display = "none";
         } else {
-            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
-            displayFiles({ result: { files: combinedResults } });
+            currentFiles = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            if(currentFiles.length > 5) {
+                currentPage = 0;
+                previousButton.style.display = "inline-block";
+                nextButton.style.display = "inline-block";
+            }
+            displayCurrentPage();
             langBtn.forEach(remove => remove.classList.remove('active'));
             categoryBtn2.forEach(remove => remove.classList.remove('active'));
             document.getElementById("loader").style.display = "none";
@@ -360,9 +370,15 @@ function showsideBar() {
 
 menu.onclick = () => {
     showsideBar();
+    previousButton.style.display = "none";
+    nextButton.style.display = "none";
 };
 
 let resultmain = document.querySelector('.Results');
+
+const PAGE_SIZE = 5;
+let currentPage = 0;
+let currentFiles = [];
 
 resultmain.onclick = () => {
     if (dataCata == null && dataLang == null) {
@@ -372,7 +388,7 @@ resultmain.onclick = () => {
         });
         return;
     }
-
+    
     let dataCataID = map1.get(dataCata);
     let query;
     
@@ -387,63 +403,105 @@ resultmain.onclick = () => {
             }))
         }
         Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-            var combinedResults = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
-            displayFiles({ result: { files: combinedResults } });
+            currentFiles = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            if(currentFiles.length > 5) {
+                currentPage = 0;
+                previousButton.style.display = "inline-block";
+                nextButton.style.display = "inline-block";
+            }
+            displayCurrentPage();
             element.innerHTML = `Search: ${dataLang}`;
-            showsideBar();                    
+            showsideBar();             
         });
     } else {
         query = `mimeType='application/pdf' and "${dataCataID}" in parents`;
         if (dataLang != null) {
             query += ` and name contains "${dataLang}"`;
         }
-
+        
         if (dataCata != null) {
             let searchLabel = dataLang ? `${dataLang} and ${dataCata}` : `${dataCata}`;
             element.innerHTML = `Search: ${searchLabel}`;
         }
-    
-        return gapi.client.drive.files.list({
+        
+        let promises = [];
+        promises.push(gapi.client.drive.files.list({
             includeItemsFromAllDrives: true,
             supportsAllDrives: true,
             q: query,
-            fields: 'files(id, name, webViewLink)'
-        }).then(function (response) {
+            fields: 'files(id, name, webViewLink)',
+        }));
+        Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
+            currentFiles = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            if(currentFiles.length > 5) {
+                currentPage = 0;
+                previousButton.style.display = "inline-block";
+                nextButton.style.display = "inline-block";
+            }
+            displayCurrentPage();
             showsideBar();
-            displayFiles(response);
         }).catch(function (err) {
             console.error("Execute error", err);
             clearList();
-        });
+        });        
     }
 };
+
+function displayCurrentPage() {
+    const startIndex = currentPage * PAGE_SIZE;
+    const endIndex = startIndex + PAGE_SIZE;
+    const filesToDisplay = currentFiles.slice(startIndex, endIndex);
+    displayFiles({ result: { files: filesToDisplay } });
+  
+    previousButton.disabled = currentPage === 0;
+    nextButton.disabled = (currentPage + 1) * PAGE_SIZE >= currentFiles.length;
+}
+  
+function goToPreviousPage() {
+    if (currentPage > 0) {
+        currentPage--;
+        displayCurrentPage();
+    }
+}
+  
+function goToNextPage() {
+    if ((currentPage + 1) * PAGE_SIZE < currentFiles.length) {
+        currentPage++;
+        displayCurrentPage();
+    }
+}
+  
+const previousButton = document.getElementById("previous-button");
+previousButton.onclick = goToPreviousPage;
+
+const nextButton = document.getElementById("next-button");
+nextButton.onclick = goToNextPage;
 
 let isLoading = false;
 
 let calendarmainDiv = document.querySelectorAll('.calendar');
 
-settings.onclick = () => {
-    if (!isLoading) {
-        isLoading = true;
-        settings.classList.add("loading");
-        setTimeout(() => {
-            settings.classList.remove("loading");
-            sideBarbox.forEach(toggle => toggle.classList.toggle('active'));
-            calendarmainDiv.forEach(div => {
-                div.classList.toggle('active');
-                if (div.classList.contains("active")) {
-                    // fetchcalendar();
-                    console.log('Fetch Calendar Events');
-                }
-            });
-            isLoading = false;
-        }, 500);
-    }
-};
+settings.onclick = async () => {
+    if (isLoading) return;
+    isLoading = true;
+    settings.classList.add("fa-spin");
+  
+    await new Promise(resolve => setTimeout(resolve, 500));
+  
+    settings.classList.remove("fa-spin");
+    sideBarbox.forEach(toggle => toggle.classList.toggle('active'));
+  
+    isLoading = false;
+};  
 
 // detect if the user is on an iOS device
 var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 var isWindows = navigator.userAgent.indexOf('Windows') > -1;
+var isAndroid = /(android)/i.test(navigator.userAgent);
+
+if (isAndroid) {
+    sideBar.style.paddingBottom  = '10px';
+}
 
 // if (isIOS) {
 //   // get a reference to the button element
@@ -488,8 +546,6 @@ feedbackFormContent.addEventListener("submit", function(event) {
         feedbackButton.style.display = "none";
         var feedbackform = document.querySelector("#feedback");
         feedbackform.innerHTML += `<div>Thanks for the feedback!</div>`
-    } else {
-        alert("Please enter your feedback before submitting.");
     }
 });    
 
@@ -511,139 +567,96 @@ langBtn.forEach(btn =>{
     }
 });
 
-// var t= new Date();
-// var xhr = new XMLHttpRequest();
-// xhr.open('GET', 'https://cors-anywhere.herokuapp.com/https://www.drikpanchang.com/dp-api/panchangam/dp-panchangam.php', true);
-// xhr.onload = function() {
-//     if (xhr.status >= 200 && xhr.status < 400) {
-//         var data = JSON.parse(xhr.response);
-//         mPanchangHeaderData = data.panchangam_header_data;
-//         if ((mPanchangHeaderData != null) && (mPanchangHeaderData != undefined)) {
-//             document.getElementById("month").innerHTML="Month: " + mPanchangHeaderData.regional_month;
-//         } else {
-//             document.getElementById("month").innerHTML="Month: Not Found";
-//         }
-//     } else {
-//         document.getElementById("month").innerHTML="Month: Not Found";
-//     }
-// };
-// xhr.send();
-// panchang.calculate(t, function() {
-//     function alltime() {
-//         document.getElementById("day").innerHTML="Today: " + panchang.Day.name;
-//         document.getElementById("tithi").innerHTML="Tithi: " + panchang.Tithi.name;
-//         document.getElementById("nakshtra").innerHTML="Nakshatra: " + panchang.Nakshatra.name;
-//         document.getElementById("karna").innerHTML="Karna: " + panchang.Karna.name;
-//         document.getElementById("yoga").innerHTML="Yoga: " + panchang.Yoga.name;
-//         document.getElementById("raasi").innerHTML="Raasi: " + panchang.Raasi.name;
-//         document.getElementById("ayanamsa").innerHTML="Ayanamsa: " + panchang.Ayanamsa.name;
-//     }
+var t= new Date();
+var xhr = new XMLHttpRequest();
+xhr.open('GET', 'https://api.allorigins.win/raw?url=https://www.drikpanchang.com/dp-api/panchangam/dp-panchangam.php', true);
+xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 400) {
+        var data = JSON.parse(xhr.response);
+        mPanchangHeaderData = data.panchangam_header_data;
+        if ((mPanchangHeaderData != null) && (mPanchangHeaderData != undefined)) {
+            document.getElementById("month").innerHTML="Month: " + mPanchangHeaderData.regional_month;
+        } else {
+            document.getElementById("month").innerHTML="Month: Not Found";
+        }
+    } else {
+        document.getElementById("month").innerHTML="Month: Not Found";
+    }
+};
+xhr.send();
 
+const formatDate = (date) => date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
 
-//     // function updateTime(){
-//     //     var t = new Date();
-//     //     hours = t.getHours();
-//     //     minutes = t.getMinutes();
-//     //     if (hours == 12) {
-//     //         ampm = "PM";
-//     //     } else if (hours > 12) {
-//     //         hours = hours - 12;
-//     //         ampm = "PM";
-//     //     } else {
-//     //         ampm = "AM";
-//     //     }
-    
-//     //     if (hours == 0) {
-//     //         hours = 12;
-//     //     }
-//     // }    
-
-//     // document.addEventListener("DOMContentLoaded", function() {
-//     //     setInterval(function(){
-//     //         updateTime();
-//     //     }, 1000);
-//     //     intervalId = setInterval(function(){
-//     //         document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-//     //     }, 1000);
-//     //     clearInterval(intervalId);
-//     // });
-
-//     alltime()
-
-//     document.getElementById("tithi").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//         document.getElementById("tithi").innerHTML = "Tithi start: " + panchang.Tithi.start + "<br><br>Tithi end: " + panchang.Tithi.end;
-//     });
-//     document.getElementById("nakshtra").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//         document.getElementById("nakshtra").innerHTML = "Nakshtra start: " + panchang.Nakshatra.start + "<br><br>Nakshtra end: " + panchang.Nakshatra.end;
-//     });
-//     document.getElementById("karna").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//         document.getElementById("karna").innerHTML = "Karna start: " + panchang.Karna.start + "<br><br>Karna end: " + panchang.Karna.end;
-//     });
-//     document.getElementById("yoga").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//         document.getElementById("yoga").innerHTML = "Yoga start: " + panchang.Yoga.start + "<br><br>Yoga end: " + panchang.Yoga.end;
-//     });
-//     document.getElementById("day").addEventListener("click", function() {
-//         alltime()
-//         // intervalId = setInterval(function(){
-//         //     document.getElementById("day").innerHTML = "Time is: " + hours + ":" + minutes + " " + ampm;
-//         // }, 500);
-//     });
-//     document.getElementById("raasi").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//     });
-//     document.getElementById("ayanamsa").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//     });
-//     document.getElementById("month").addEventListener("click", function() {
-//         alltime()
-//         // clearInterval(intervalId);
-//     });
-// });
+panchang.calculate(t, () => {
+    const elements = {
+      day: "Day",
+      tithi: "Tithi",
+      nakshtra: "Nakshatra",
+      karna: "Karna",
+      yoga: "Yoga",
+      raasi: "Raasi",
+      ayanamsa: "Ayanamsa",
+      month: "Month",
+    };
+  
+    const alltime = () => {
+      for (const id in elements) {
+        const obj = panchang[elements[id]];
+        if (obj) {
+          const name = obj.name;
+          document.getElementById(id).innerHTML = `${elements[id]}: ${name}`;
+        } else {
+            if(document.getElementById(id).innerHTML == "Month: " + mPanchangHeaderData.regional_month) {
+                document.getElementById(id).addEventListener("click", alltime);
+            } else {
+                document.getElementById(id).addEventListener("click", alltime);
+            }
+        }
+      }
+    };
+  
+    for (const id in elements) {
+      const element = document.getElementById(id);
+      const obj = panchang[elements[id]];
+      if (obj) {
+        const name = obj.name;
+        element.innerHTML = `${elements[id]}: ${name}`;
+        
+        if (id !== "day" && id !== "raasi" && id !== "ayanamsa") {
+          element.addEventListener("click", () => {
+            const data = panchang[elements[id]];
+            const start = formatDate(new Date(data.start));
+            const end = formatDate(new Date(data.end));
+            alltime();
+            element.innerHTML = `${elements[id]} start: ${start} (Pacific Daylight Time)<br><br>${elements[id]} end: ${end} (Pacific Daylight Time)`;
+          });
+        } else {
+          element.addEventListener("click", () => {
+              alltime();
+          });
+        } 
+      }
+    }
+}); 
 
 let reset = document.querySelector('.reset');
 
 reset.onclick = () => {
-    sideBar.scrollTo({
-        top: 0,
-        behavior: 'smooth'
-    });
-    langBtn.forEach(remove => remove.classList.remove('active'));
-    categoryBtn2.forEach(remove => remove.classList.remove('active'));
-    element.innerHTML = `Search Stotram: `;
-    dataCata = null;
-    dataLang = null;
+    sideBar.scrollTo({ top: 0, behavior: 'smooth' });
+    langBtn.forEach(btn => btn.classList.remove('active'));
+    categoryBtn2.forEach(btn => btn.classList.remove('active'));
+    element.textContent = "Search Stotram: ";
+    previousButton.style.display = nextButton.style.display = "none";
+    dataCata = dataLang = null;
     document.getElementById("search-box").value = "";
     document.getElementById("search-box").placeholder = "Search Stotram...";
-    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>'
+    listContainer.innerHTML = '<div style="text-align: center;">No Files</div>';
 }
 
 document.addEventListener("contextmenu", function (e) {
     e.preventDefault();
 })
-
-document.onkeydown = function (e) {
-    if(event.keyCode == 123){
-        return false;
-    }
-
-    if(e.ctrlKey && e.shiftKey && e.keyCode == "J".charCodeAt(0)){
-        return false;
-    }
-
-    if(e.ctrlKey && e.keyCode == "U".charCodeAt(0)){
-        return false;
-    }
-};
 
 let darkMODEButton = document.querySelectorAll('.DARKMODE .btn');
 
