@@ -258,6 +258,7 @@ function fetchcalendar() {
             const eventDate = startDate.toLocaleDateString();
             const eventTime = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' - ' + endDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
             var eventDescription = event.description;
+            console.log(eventDescription);
             if (eventDescription != null){
                 if (eventDescription.includes('RSVP')) {
                     if (eventDescription.includes('href')){
@@ -328,7 +329,19 @@ function searchInFolder(searchvalue) {
         langBtn.forEach(remove => remove.classList.remove('active'));
         categoryBtn2.forEach(remove => remove.classList.remove('active'));
         return;
+    } else {
+        if(searchvalue.length <= 2) {
+            clearList();
+            listContainer.innerHTML = '<div style="text-align: center;">Search for 3 or more letters</div>'
+            element.innerHTML = `Search Stotram: `;
+            document.getElementById("loader").style.display = "none";
+            langBtn.forEach(remove => remove.classList.remove('active'));
+            categoryBtn2.forEach(remove => remove.classList.remove('active'));
+            return;
+        }
     }
+
+
     var promises = []
     for (let [folderName, folderId] of map1.entries()) {
         promises.push(gapi.client.drive.files.list({
@@ -339,14 +352,7 @@ function searchInFolder(searchvalue) {
         }))
     }
     Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
-        if(searchvalue.length <= 2) {
-            clearList();
-            listContainer.innerHTML = '<div style="text-align: center;">Search for 3 or more letters</div>'
-            element.innerHTML = `Search Stotram: `;
-            document.getElementById("loader").style.display = "none";
-            langBtn.forEach(remove => remove.classList.remove('active'));
-            categoryBtn2.forEach(remove => remove.classList.remove('active'));
-        } else {
+        if(searchvalue.length > 2) {
             currentFiles = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
             if(currentFiles.length > 5) {
                 currentPage = 0;
@@ -381,6 +387,7 @@ let currentPage = 0;
 let currentFiles = [];
 
 resultmain.onclick = () => {
+    errorMessage.style.display = 'none';
     if (dataCata == null && dataLang == null) {
         sideBar.scrollTo({
             top: 0,
@@ -433,6 +440,7 @@ resultmain.onclick = () => {
         }));
         Promise.all(promises.map(p => p.then(r => r))).then(function(responses) {
             currentFiles = responses.reduce((allFiles, currentFiles) => allFiles.concat(currentFiles.result.files), []);
+            console.log(currentFiles);
             if(currentFiles.length > 5) {
                 currentPage = 0;
                 previousButton.style.display = "inline-block";
@@ -569,7 +577,7 @@ langBtn.forEach(btn =>{
 
 var t= new Date();
 var xhr = new XMLHttpRequest();
-xhr.open('GET', 'https://api.allorigins.win/raw?url=https://www.drikpanchang.com/dp-api/panchangam/dp-panchangam.php', true);
+xhr.open('GET', 'https://corsproxy.io/?https%3A%2F%2Fwww.drikpanchang.com%2Fdp-api%2Fpanchangam%2Fdp-panchangam.php', true);
 xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 400) {
