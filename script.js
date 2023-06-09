@@ -592,6 +592,11 @@ xhr.onload = function() {
         document.getElementById("month").innerHTML="Month: Not Found";
     }
 };
+
+xhr.onerror = function() {
+    document.getElementById("month").innerHTML = "Month: Not Found";
+};
+
 xhr.send();
 
 const formatDate = (date) => date.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
